@@ -1,6 +1,6 @@
 Skurk
 =====
 
-Project in Information Visualization
+Project in Information Visualization at Linköping's University
 
-Yes it is a bloody good proj
+Contributors: Simon Bergström, Oscar Ivarsson, John Hollén
