@@ -1,6 +1,5 @@
 
 #intro {
-	border: solid;
 	height: 300px;
 	width: 600px;
 	margin: 200px auto;
@@ -8,9 +7,13 @@
 }
 
 #startButton {
-	margin: 0px auto;
+	margin-top: 30px;
 }
 
 #introHeader {
-	margin: 0px auto;
+	
+}
+
+#introText {
+	margin-top: 20px;
 }
