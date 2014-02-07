@@ -1,0 +1,16 @@
+
+#intro {
+	border: solid;
+	height: 300px;
+	width: 600px;
+	margin: 200px auto;
+	text-align: center;
+}
+
+#startButton {
+	margin: 0px auto;
+}
+
+#introHeader {
+	margin: 0px auto;
+}
