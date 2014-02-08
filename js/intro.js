@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(document).ready(function() {
   
 	// Application initalization
 	$("#main, #footer").hide();
