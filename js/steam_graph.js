@@ -8,8 +8,8 @@ function SteamGraph(){
 
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = spDiv.width() - margin.right - margin.left,
-        height = spDiv.height() - margin.top - margin.bottom;
+        width = steamGraphDiv.width() - margin.right - margin.left,
+        height = steamGraphDiv.height() - margin.top - margin.bottom;
 
 	var n = 20, // number of layers
     m = 200, // number of samples per layer
