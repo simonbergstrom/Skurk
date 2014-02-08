@@ -74,7 +74,7 @@ function SteamGraph(){
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(-10,-25)");    
+        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(10,10)");    
  
 
 
