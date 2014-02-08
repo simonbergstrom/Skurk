@@ -4,7 +4,7 @@ function SteamGraph(){
 
 	var self = this; // for internal d3 functions
 
-    var steamGraphDiv = $("#SteamGraph");
+    var steamGraphDiv = $("steamGraph");
 
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -17,9 +17,6 @@ function SteamGraph(){
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
-	var width = 960,
-	    height = 500;
-
 	var x = d3.scale.linear()
 	    .domain([0, m - 1])
 	    .range([0, width]);
@@ -31,14 +28,25 @@ function SteamGraph(){
 	var color = d3.scale.linear()
 	    .range(["#aad", "#556"]);
 
+	 /*
+	     var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    	var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+	 */   
+
 	var area = d3.svg.area()
 	    .x(function(d) { return x(d.x); })
 	    .y0(function(d) { return y(d.y0); })
 	    .y1(function(d) { return y(d.y0 + d.y); });
 
-	var svg = d3.select("body").append("svg")
-	    .attr("width", width)
-	    .attr("height", height);
+	var svg = d3.select("#steamGraph").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height+ margin.top + margin.bottom);
 
 	svg.selectAll("path")
 	    .data(layers0)
@@ -61,7 +69,7 @@ function SteamGraph(){
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
 
-	  /*function bump(a) {
+	  function bump(a) {
 	    var x = 1 / (.1 + Math.random()),
 	        y = 2 * Math.random() - .5,
 	        z = 10 / (.1 + Math.random());
@@ -74,7 +82,7 @@ function SteamGraph(){
 	  var a = [], i;
 	  for (i = 0; i < n; ++i) a[i] = 0;
 	  for (i = 0; i < 5; ++i) bump(a);
-	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });*/
+	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
 
 
