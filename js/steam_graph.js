@@ -1,7 +1,5 @@
 function SteamGraph(){
 
-
-
 	var self = this; // for internal d3 functions
 
     var steamGraphDiv = $("steamGraph");
@@ -10,6 +8,9 @@ function SteamGraph(){
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
+
+
+        //console.log("width: " + steamGraphDiv.width())
 
 	var n = 20, // number of layers
     m = 200, // number of samples per layer
@@ -54,7 +55,7 @@ function SteamGraph(){
 	    .attr("d", area)
 	    .style("fill", function() { return color(Math.random()); });
 
-	function transition() {
+	/*function transition() {
 	  d3.selectAll("path")
 	      .data(function() {
 	        var d = layers1;
@@ -63,8 +64,8 @@ function SteamGraph(){
 	      })
 	    .transition()
 	      .duration(2500)
-	      .attr("d", area);
-	}
+	      .attr("d", area); 
+	}*/
 
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
@@ -78,7 +79,6 @@ function SteamGraph(){
 	      a[i] += x * Math.exp(-w * w);
 	    }
 	  }
-
 	  var a = [], i;
 	  for (i = 0; i < n; ++i) a[i] = 0;
 	  for (i = 0; i < 5; ++i) bump(a);

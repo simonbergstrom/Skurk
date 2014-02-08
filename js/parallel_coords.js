@@ -9,6 +9,7 @@ function ParallelCoords()
 
 	parallelDiv.css("background-color", "black");
 
+
 	var margin = [30, 10, 10, 10],
         width = parallelDiv.width() - margin[1] - margin[3],
         height = parallelDiv.height() - margin[0] - margin[2];
