@@ -1,4 +1,4 @@
-//var steamGraph = new SteamGraph();
+var steamGraph = new SteamGraph();
 
 var parallelCoords = new ParallelCoords();
 

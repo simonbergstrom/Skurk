@@ -7,7 +7,7 @@ function ParallelCoords()
 
 	var parallelDiv = $("#parallelCoords");
 
-	console.log(parallelDiv);
+	//console.log(parallelDiv);
 
 	var margin = [30, 10, 10, 10],
         width = parallelDiv.width() - margin[1] - margin[3],

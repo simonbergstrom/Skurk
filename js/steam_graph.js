@@ -2,15 +2,20 @@ function SteamGraph(){
 
 	var self = this; // for internal d3 functions
 
-    var steamGraphDiv = $("steamGraph");
+    var steamGraphDiv = $("#steamGraph");
 
+    console.log($("#steamGraph"));
 
+    steamGraphDiv.style("border-color, #FF0000");
+    steamGraphDiv.append("<p>Test</p>");
+
+/*
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
 
 
-        //console.log("width: " + steamGraphDiv.width())
+   
 
 	var n = 20, // number of layers
     m = 200, // number of samples per layer
@@ -29,16 +34,16 @@ function SteamGraph(){
 	var color = d3.scale.linear()
 	    .range(["#aad", "#556"]);
 
-	 /*
-	     var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+	 
+	   //  var xAxis = d3.svg.axis()
+     //    .scale(x)
+     //    .orient("bottom");
 
-    	var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+    	// var yAxis = d3.svg.axis()
+     //    .scale(y)
+     //    .orient("left");
 
-	 */   
+	  
 
 	var area = d3.svg.area()
 	    .x(function(d) { return x(d.x); })
@@ -55,17 +60,17 @@ function SteamGraph(){
 	    .attr("d", area)
 	    .style("fill", function() { return color(Math.random()); });
 
-	/*function transition() {
-	  d3.selectAll("path")
-	      .data(function() {
-	        var d = layers1;
-	        layers1 = layers0;
-	        return layers0 = d;
-	      })
-	    .transition()
-	      .duration(2500)
-	      .attr("d", area); 
-	}*/
+	//function transition() {
+	  //d3.selectAll("path")
+	    //  .data(function() {
+	      //  var d = layers1;
+	        //layers1 = layers0;
+	       // return layers0 = d;
+	     // })
+	   // .transition()
+	    //  .duration(2500)
+	    //  .attr("d", area); 
+	}
 
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
@@ -85,6 +90,6 @@ function SteamGraph(){
 	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
 
-
+*/
 
 }
