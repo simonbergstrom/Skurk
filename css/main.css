@@ -30,7 +30,12 @@ body {
 	padding-top: 10px;
 }
 
-#viewBottom, #viewTopRight, #viewTopLeft {
+#viewBottomLeft, #viewTopLeft {
 	border: solid;
 	height: 330px;
+}
+
+#viewRight {
+	border: solid;
+	height: 660px;
 }
