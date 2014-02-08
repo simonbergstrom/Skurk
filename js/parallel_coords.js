@@ -7,7 +7,7 @@ function ParallelCoords()
 
 	var parallelDiv = $("#parallelCoords");
 
-	console.log(parallelDiv);
+	parallelDiv.css("background-color", "black");
 
 	var margin = [30, 10, 10, 10],
         width = parallelDiv.width() - margin[1] - margin[3],
@@ -21,4 +21,15 @@ function ParallelCoords()
     	backGround,
     	foreGround;
 
+    var svg = d3.select("#parallelCoords").append("svg:svg")
+    	.attr("width", width + margin[1] + margin[3])
+    	.attr("height", height + margin[0] + margin[2])
+    	.append("svg:g")
+    	.attr("transform", "translate(" + margin[3] + "," + margin[0] + ")"); 
+
+    //Load the data
+
+    d3.csv("theFile", function(data){
+
+    });
 }
