@@ -1,7 +1,11 @@
-//var steamGraph = new SteamGraph();
+$( document ).ready(function() {
 
-var parallelCoords = new ParallelCoords();
+	var steamGraph = new SteamGraph();
 
-//var map = new Map();
+	var parallelCoords = new ParallelCoords();
+
+	var map = new Map();
+
+});
 
 
