@@ -1,7 +1,5 @@
 function SteamGraph(){
 
-
-
 	var self = this; // for internal d3 functions
 
     var steamGraphDiv = $("steamGraph");
