@@ -1,8 +1,10 @@
+<<<<<<< HEAD
 $( document ).ready(function() {
   	
 	$("#intro").hide();
 
-  	/*
+  	/* // Commented only for developing mode
+
 	// Application initalization
 	$("#main, #footer").hide();
 
@@ -14,6 +16,7 @@ $( document ).ready(function() {
 			});
 		});
 	});
+
 	*/
 	
 });
