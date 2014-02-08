@@ -2,19 +2,13 @@ function SteamGraph(){
 
 	var self = this; // for internal d3 functions
 
+	var padding = -15; // pad the plot on the Y-Axis... 
+
     var steamGraphDiv = $("#steamGraph");
 
-    console.log($("#steamGraph"));
-
-    steamGraphDiv.style("border-color, #FF0000");
-    steamGraphDiv.append("<p>Test</p>");
-
-/*
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
-
-
    
 
 	var n = 20, // number of layers
@@ -28,20 +22,26 @@ function SteamGraph(){
 	    .range([0, width]);
 
 	var y = d3.scale.linear()
-	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
+	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 	    .range([height, 0]);
 
 	var color = d3.scale.linear()
 	    .range(["#aad", "#556"]);
 
 	 
-	   //  var xAxis = d3.svg.axis()
-     //    .scale(x)
-     //    .orient("bottom");
 
-    	// var yAxis = d3.svg.axis()
-     //    .scale(y)
-     //    .orient("left");
+	 // Create the axis..
+	var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+
+
+    var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+    yAxis.tickFormat("");
 
 	  
 
@@ -52,12 +52,37 @@ function SteamGraph(){
 
 	var svg = d3.select("#steamGraph").append("svg")
 	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height+ margin.top + margin.bottom);
+	    .attr("height", height+ margin.top + margin.bottom)
+	    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + (-10) + ")");
+
+    // Add x axis and title.
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .append("text")
+        .attr("class", "label")
+        .attr("x", width)
+        .attr("y", -6).text("Years").attr("transform","translate(-40,-5)");
+        
+    // Add y axis and title.
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(-10,-25)");    
+ 
+
 
 	svg.selectAll("path")
 	    .data(layers0)
 	  .enter().append("path")
 	    .attr("d", area)
+	    .attr("transform", "translate(0," + padding + ")")
 	    .style("fill", function() { return color(Math.random()); });
 
 	//function transition() {
@@ -70,7 +95,7 @@ function SteamGraph(){
 	   // .transition()
 	    //  .duration(2500)
 	    //  .attr("d", area); 
-	}
+	//}
 
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
@@ -89,7 +114,4 @@ function SteamGraph(){
 	  for (i = 0; i < 5; ++i) bump(a);
 	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
-
-*/
-
 }
