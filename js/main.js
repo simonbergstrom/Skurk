@@ -1,7 +1,7 @@
-var steamGraph = new SteamGraph();
+//var steamGraph = new SteamGraph();
 
 var parallelCoords = new ParallelCoords();
 
-var map = new Map();
+//var map = new Map();
 
 
