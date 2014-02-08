@@ -1,5 +1,8 @@
 $( document ).ready(function() {
-  
+  	
+	$("#intro").hide();
+
+  	/*
 	// Application initalization
 	$("#main, #footer").hide();
 
@@ -11,6 +14,7 @@ $( document ).ready(function() {
 			});
 		});
 	});
+	*/
 	
 });
 
