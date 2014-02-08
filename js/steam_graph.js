@@ -61,8 +61,8 @@ function SteamGraph(){
 	      })
 	    .transition()
 	      .duration(2500)
-	      .attr("d", area); */
-	}
+	      .attr("d", area); 
+	}*/
 
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
