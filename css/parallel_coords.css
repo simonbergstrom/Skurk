@@ -32,7 +32,7 @@
     shape-rendering: crispEdges;
 }
 
-.axis line, .axis path {
+#parallelCoords .axis line, #parallelCoords .axis path {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
