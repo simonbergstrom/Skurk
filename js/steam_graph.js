@@ -17,6 +17,9 @@ function SteamGraph(){
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
+    /********* Tooltip ***********/
+    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
+
 	var x = d3.scale.linear()
 	    .domain([0, m - 1])
 	    .range([0, width]);
@@ -79,7 +82,23 @@ function SteamGraph(){
 	  .enter().append("path")
 	    .attr("d", area)
 	    .attr("transform", "translate(0," + padding + ")")
-	    .style("fill", function() { return color(Math.random()); });
+	    .style("fill", function() { return color(Math.random()); })
+	/****** Tool tip *********/
+        .on("mousemove", function(d) {
+        //...  
+    	tooltip.transition()
+       .duration(200)
+       .style("opacity", .9);
+    	tooltip.html("TEST")
+       .style("left", (d3.event.pageX + 5) + "px")
+       .style("top", (d3.event.pageY - 28) + "px");    
+	    })
+	    .on("mouseout", function(d) {
+	        //... 
+	        tooltip.transition()
+	       .duration(500)
+	       .style("opacity", 0);  
+	    })
 
 	//function transition() {
 	  //d3.selectAll("path")
