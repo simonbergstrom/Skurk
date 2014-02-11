@@ -5,16 +5,13 @@ function Map(){
 	
 
 
-    d3.json("data/kommuner_swe_2.json", function(error, world) {
-        
-    	console.log(world);
+    d3.json("data/swe_kommuner.json", function(error, sweden) {
 
-
-        //var countries = topojson.feature(world, world.objects.countries).features;
+        var municipalities = topojson.feature(sweden, sweden.objects.municipalities).features;
 
         
 
-        //console.log(countries);
+        console.log(municipalities);
         
     });
 
