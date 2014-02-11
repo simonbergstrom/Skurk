@@ -25,10 +25,10 @@ function SteamGraph(){
 	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 	    .range([height, 0]);
 
-	var color = d3.scale.linear()
-	    .range(["#aad", "#556"]);
+	//var color = d3.scale.linear()
+	//    .range(["#aad", "#556"]);
 
-	 
+	var color = d3.scale.category20b();
 
 	 // Create the axis..
 	var xAxis = d3.svg.axis()
@@ -42,8 +42,6 @@ function SteamGraph(){
     .orient("left");
 
     yAxis.tickFormat("");
-
-	  
 
 	var area = d3.svg.area()
 	    .x(function(d) { return x(d.x); })
@@ -64,7 +62,7 @@ function SteamGraph(){
         .append("text")
         .attr("class", "label")
         .attr("x", width)
-        .attr("y", -6).text("Years").attr("transform","translate(-40,-5)");
+        .attr("y", -6).text("Years").attr("transform","translate(-20,25)");
         
     // Add y axis and title.
     svg.append("g")
@@ -76,8 +74,6 @@ function SteamGraph(){
         .attr("y", 6)
         .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(10,10)");    
  
-
-
 	svg.selectAll("path")
 	    .data(layers0)
 	  .enter().append("path")
