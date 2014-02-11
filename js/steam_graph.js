@@ -17,6 +17,9 @@ function SteamGraph(){
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
+    /********* Tooltip ***********/
+    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
+
 	var x = d3.scale.linear()
 	    .domain([0, m - 1])
 	    .range([0, width]);
@@ -25,10 +28,10 @@ function SteamGraph(){
 	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 	    .range([height, 0]);
 
-	var color = d3.scale.linear()
-	    .range(["#aad", "#556"]);
+	//var color = d3.scale.linear()
+	//    .range(["#aad", "#556"]);
 
-	 
+	var color = d3.scale.category20b();
 
 	 // Create the axis..
 	var xAxis = d3.svg.axis()
@@ -42,8 +45,6 @@ function SteamGraph(){
     .orient("left");
 
     yAxis.tickFormat("");
-
-	  
 
 	var area = d3.svg.area()
 	    .x(function(d) { return x(d.x); })
@@ -64,7 +65,7 @@ function SteamGraph(){
         .append("text")
         .attr("class", "label")
         .attr("x", width)
-        .attr("y", -6).text("Years").attr("transform","translate(-40,-5)");
+        .attr("y", -6).text("Years").attr("transform","translate(-20,25)");
         
     // Add y axis and title.
     svg.append("g")
@@ -76,14 +77,29 @@ function SteamGraph(){
         .attr("y", 6)
         .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(10,10)");    
  
-
-
 	svg.selectAll("path")
 	    .data(layers0)
 	  .enter().append("path")
 	    .attr("d", area)
 	    .attr("transform", "translate(0," + padding + ")")
-	    .style("fill", function() { return color(Math.random()); });
+	    .style("fill", function() { return color(Math.random()); })
+	/****** Tool tip *********/
+
+        .on("mousemove", function(d, i) {
+        //... 
+    	tooltip.transition()
+       .duration(200)
+       .style("opacity", .9);
+    	tooltip.html("Layer " + i)
+       .style("left", (d3.event.pageX + 5) + "px")
+       .style("top", (d3.event.pageY - 28) + "px");    
+	    })
+	    .on("mouseout", function(d) {
+	        //... 
+	        tooltip.transition()
+	       .duration(500)
+	       .style("opacity", 0);  
+	    })
 
 	//function transition() {
 	  //d3.selectAll("path")
