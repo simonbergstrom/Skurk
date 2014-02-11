@@ -10,7 +10,6 @@ function SteamGraph(){
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
    
-
 	var n = 20, // number of layers
     m = 200, // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
@@ -20,30 +19,29 @@ function SteamGraph(){
     /********* Tooltip ***********/
     var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
+    //X-axel
 	var x = d3.scale.linear()
 	    .domain([0, m - 1])
 	    .range([0, width]);
 
+	//Y-axel
 	var y = d3.scale.linear()
 	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 	    .range([height, 0]);
 
-	//var color = d3.scale.linear()
-	//    .range(["#aad", "#556"]);
-
+	// Färg på plotten
 	var color = d3.scale.category20b();
 
-	 // Create the axis..
+	// Create the axis..
 	var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
-
-
 
     var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
 
+    //Ta bort skala på Y-axel...
     yAxis.tickFormat("");
 
 	var area = d3.svg.area()
@@ -100,6 +98,10 @@ function SteamGraph(){
 	       .duration(500)
 	       .style("opacity", 0);  
 	    })
+	    .on("click",  function(d) {
+            //... 
+            selFeature(d);   
+        });
 
 	//function transition() {
 	  //d3.selectAll("path")
