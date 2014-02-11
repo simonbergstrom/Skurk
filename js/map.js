@@ -19,12 +19,15 @@ function Map(){
     var infoBox = d3.select("#map").insert("div")
  		.style("position", "absolute") 
 		.style("z-index", "10")
-        .style("border", 3 + "px solid")
+        .style("border", 3 + "px solid #000000")
         .style("width", 147 + "px")
         .style("height", 35 + "px")
         .style("left", 70 + "%")
         .style("top", 95 + "%")
         .style("font-size", 20 + 'px')
+        .style("color", '#FFFFFF')
+        .style("background-color", '#555555')
+        .style("padding-left", 3 + 'px')
 	    .text("");
 
     var projection = d3.geo.mercator()
