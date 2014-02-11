@@ -4,8 +4,8 @@ function Map(){
 
 	var mapDiv = $("#map");
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
-	var width = mapDiv.width() - margin.right - margin.left + 0;
-    var height = mapDiv.height() - margin.top - margin.bottom + 30;
+	var width = mapDiv.width() - margin.right - margin.left + 35;
+    var height = mapDiv.height() - margin.top - margin.bottom + 35;
 
     var zoom = d3.behavior.zoom()
         .scaleExtent([1, 8])
@@ -15,14 +15,20 @@ function Map(){
         .attr("width", width)
         .attr("height", height)
         .call(zoom);
-        //.style("border", "solid");
 
-    var div = d3.select("body").append("div")   
-        .attr("class", "tooltip")               
-        .style("opacity", 0);
+    var infoBox = d3.select("#map").insert("div")
+ 		.style("position", "absolute") 
+		.style("z-index", "10")
+        .style("border", 3 + "px solid")
+        .style("width", 147 + "px")
+        .style("height", 35 + "px")
+        .style("left", 70 + "%")
+        .style("top", 95 + "%")
+        .style("font-size", 20 + 'px')
+	    .text("");
 
     var projection = d3.geo.mercator()
-        .center([32, 64.5 ])
+        .center([31, 64.5 ])
         .scale(1200);
 
     var path = d3.geo.path()
@@ -52,7 +58,31 @@ function Map(){
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
             .style("fill", function(d) {
-                return '#FF0000'; 
+            	var R = parseInt(Math.random()*255);
+            	var G = parseInt(Math.random()*255);
+            	var B = parseInt(Math.random()*255);
+                return 'RGB(' + R + ',' + G + ',' + B + ')'; 
+            })
+            .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
+            .on("mousemove", function(d) {
+                
+                 d3.select(this).transition().duration(100)
+    				.style({ 'fill-opacity':0.2,'stroke-opacity':1.0 });
+
+                infoBox.transition()        
+                    .duration(200)      
+                    .style("opacity", 1.0);  
+
+                infoBox.html(d.properties.name);
+                    
+            })
+            .on("mouseout",  function(d) {
+                
+            	d3.select(this).transition().duration(100)
+    				.style({ 'fill-opacity':1.0,'stroke-opacity':0.0 });
+
+    			infoBox.html("");
+
             });
 
     }

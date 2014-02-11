@@ -2,7 +2,7 @@
 html,
 body {
   height: 100%;
-  padding-top: 35px;
+  padding-top: 30px;
   /* The html and body elements cannot have any padding or margin. */
 }
 
@@ -28,16 +28,17 @@ body {
 	height: 60px;
 	text-align: center;
 	padding-top: 10px;
+  margin-top: 5px;
 }
 
 #viewBottomLeft, #viewTopLeft {
-	border: 1px solid #333;
+	border: 2px solid #555555;
 	height: 330px;
 
 }
 
 #viewRight {
-	border: 1px solid #333;
+	border: 2px solid #555555;
 	height: 660px;
 
 }
