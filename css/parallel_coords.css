@@ -19,11 +19,11 @@
 }
 
 .foreground path:hover{
-    stroke-width: 3px !important;
+    stroke-width: 10px !important;
 }
 
 .background path:hover{
-    stroke-width: 3px !important;
+    stroke-width: 10px !important;
 }
 
 .brush .extent {
