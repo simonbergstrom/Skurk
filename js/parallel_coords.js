@@ -7,7 +7,7 @@ function ParallelCoords()
 
     var pcDiv = $("#parallelCoords");
 
-    var margin = [20, -90, 100, -90],
+    var margin = [20, -90, 100, -50],
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
 
