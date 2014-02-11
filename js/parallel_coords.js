@@ -5,6 +5,10 @@ function ParallelCoords()
 
 	var self = this; // for internal d3 functions
 
+    var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
     var pcDiv = $("#parallelCoords");
 
     var margin = [20, -90, 100, -50],
@@ -65,7 +69,25 @@ function ParallelCoords()
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; }); 
+            .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; })
+            .on("mousemove", function(d) {
+                //...
+               tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
+                tooltip.html("Test")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+
+
+            })
+            .on("mouseout", function(d) {
+                //...
+                tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+                 
+            }); 
             //.style("stroke", function(d,i){ return color(kmeansRes[i])});
             //Assign the cluster colors
             //..
