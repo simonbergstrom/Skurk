@@ -84,12 +84,13 @@ function SteamGraph(){
 	    .attr("transform", "translate(0," + padding + ")")
 	    .style("fill", function() { return color(Math.random()); })
 	/****** Tool tip *********/
-        .on("mousemove", function(d) {
-        //...  
+
+        .on("mousemove", function(d, i) {
+        //... 
     	tooltip.transition()
        .duration(200)
        .style("opacity", .9);
-    	tooltip.html("TEST")
+    	tooltip.html("Layer " + i)
        .style("left", (d3.event.pageX + 5) + "px")
        .style("top", (d3.event.pageY - 28) + "px");    
 	    })
