@@ -33,9 +33,21 @@ body {
 #viewBottomLeft, #viewTopLeft {
 	border: 1px solid #333;
 	height: 330px;
+
 }
 
 #viewRight {
 	border: 1px solid #333;
 	height: 660px;
+
+}
+
+.container, .col-md-7, .col-md-5, .col-md-12 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.row {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
 }

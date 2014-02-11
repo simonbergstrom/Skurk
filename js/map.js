@@ -4,8 +4,8 @@ function Map(){
 
 	var mapDiv = $("#map");
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
-	var width = mapDiv.width() - margin.right - margin.left + 100;
-    var height = mapDiv.height() - margin.top - margin.bottom + 100;
+	var width = mapDiv.width() - margin.right - margin.left + 0;
+    var height = mapDiv.height() - margin.top - margin.bottom + 30;
 
     var zoom = d3.behavior.zoom()
         .scaleExtent([1, 8])
@@ -15,14 +15,15 @@ function Map(){
         .attr("width", width)
         .attr("height", height)
         .call(zoom);
+        //.style("border", "solid");
 
     var div = d3.select("body").append("div")   
         .attr("class", "tooltip")               
         .style("opacity", 0);
 
     var projection = d3.geo.mercator()
-        .center([50, 60 ])
-        .scale(850);
+        .center([32, 64.5 ])
+        .scale(1200);
 
     var path = d3.geo.path()
         .projection(projection);
