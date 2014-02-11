@@ -31,11 +31,11 @@ body {
 }
 
 #viewBottomLeft, #viewTopLeft {
-	border: solid;
+	border: 1px solid #333;
 	height: 330px;
 }
 
 #viewRight {
-	border: solid;
+	border: 1px solid #333;
 	height: 660px;
 }

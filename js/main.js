@@ -1,4 +1,6 @@
+
 $( document ).ready(function() {
+
 
 	var steamGraph = new SteamGraph();
 
