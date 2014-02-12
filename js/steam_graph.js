@@ -16,6 +16,25 @@ function SteamGraph(){
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
+    /********* Ladda in data **********/
+    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
+    // Extract the list of dimensions and create a scale for each.
+    x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+        return (y[d] = d3.scale.linear()
+            .domain(d3.extent(data, function(p) { return +p[d]; }))
+    
+            //assign the the axis scale  between [0 1]
+            //...
+    
+            .range([height, 0])
+            ); 
+    }));
+    
+    self.data = data;
+    
+    });
+
+
     /********* Tooltip ***********/
     var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
