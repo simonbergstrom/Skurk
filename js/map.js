@@ -61,12 +61,12 @@ function Map(){
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            /*.style("fill", function(d) {
+            .style("fill", function(d) {
             	var R = parseInt(Math.random()*255);
             	var G = parseInt(Math.random()*255);
             	var B = parseInt(Math.random()*255);
                 return 'RGB(' + R + ',' + G + ',' + B + ')'; 
-            })*/
+            })
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
                 
@@ -88,15 +88,6 @@ function Map(){
     			infoBox.html("");
 
             });
-           /*
-        d3.json("unemployment.json", function(json) {
-			data = json;
-
-			// for each county, set the css class using the quantize function
-			// (an external CSS file contains the css classes for each color in the scheme)
-			counties.selectAll("path")
-			  .attr("class", quantize);
-		});*/
 
     }
 
