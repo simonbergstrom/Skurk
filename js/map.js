@@ -41,13 +41,14 @@ function Map(){
 	
 
 
-	// Load data from topojson file
+	// Load map data
     d3.json("data/swe_mun.json", function(error, sweden) {
 
     	var data = topojson.feature(sweden, sweden.objects.swe_mun).features;
 		draw(data);   
 
     });
+
 
 
     // Draw map
@@ -60,17 +61,17 @@ function Map(){
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            .style("fill", function(d) {
+            /*.style("fill", function(d) {
             	var R = parseInt(Math.random()*255);
             	var G = parseInt(Math.random()*255);
             	var B = parseInt(Math.random()*255);
                 return 'RGB(' + R + ',' + G + ',' + B + ')'; 
-            })
+            })*/
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
                 
                  d3.select(this).transition().duration(100)
-    				.style({ 'fill-opacity':0.2,'stroke-opacity':1.0 });
+    				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });
 
                 infoBox.transition()        
                     .duration(200)      
@@ -87,6 +88,15 @@ function Map(){
     			infoBox.html("");
 
             });
+           /*
+        d3.json("unemployment.json", function(json) {
+			data = json;
+
+			// for each county, set the css class using the quantize function
+			// (an external CSS file contains the css classes for each color in the scheme)
+			counties.selectAll("path")
+			  .attr("class", quantize);
+		});*/
 
     }
 
@@ -100,6 +110,10 @@ function Map(){
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
 
     }
+
+    function quantize(d) {
+		return "q" + Math.min(8, ~~(data[d.id] * 9 / 12)) + "-9";
+	}
 
 
 
