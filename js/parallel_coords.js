@@ -11,7 +11,7 @@ function ParallelCoords()
 
     var pcDiv = $("#parallelCoords");
 
-    var margin = [20, -90, 100, -50],
+    var margin = [20, -20, 50, 0],
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
 
@@ -32,7 +32,7 @@ function ParallelCoords()
 
     //Load the data
 
-    d3.csv("data/testdata.csv", function(data) {
+    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
