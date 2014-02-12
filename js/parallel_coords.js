@@ -31,8 +31,11 @@ function ParallelCoords()
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     //Load the data
+    var realData = "data/crime_monthly_municipatalities_2013.csv";
+    var testData = "data/testdata.csv";
+    var realData2 = "data/crime_monthly_municipatalities_2013.json"
 
-    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
+    d3.csv(testData, function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
