@@ -110,9 +110,9 @@ function Map(){
     }
 
     function quantize(d) {
-        //console.log(d.properties.name);
+        //console.log(crimeData["Hela landet"]);
     	//console.log(crimeData[d.properties.name]);
-		//return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
+		return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
 	}
 
 
