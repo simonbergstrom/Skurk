@@ -11,7 +11,7 @@ function ParallelCoords()
 
     var pcDiv = $("#parallelCoords");
 
-    var margin = [20, -20, 50, 0],
+    var margin = [60, 0, 50, 0],
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
 
@@ -35,9 +35,15 @@ function ParallelCoords()
     var testData = "data/testdata.csv";
     var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
+
     d3.csv(testData, function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+
+    d3.json(realData2, function(data) {
+        // Extract the list of dimensions and create a scale for each.
+        x.domain(dimensions = d3.keys(data["Ale"]).filter(function(d) {
+
             return (y[d] = d3.scale.linear()
                 .domain(d3.extent(data, function(p) { return +p[d]; }))
         
@@ -47,13 +53,43 @@ function ParallelCoords()
                 .range([height, 0])
                 ); 
         }));
-        
+
         self.data = data;
         
         draw();
     });
 
     function draw(){
+
+        var dataAsArray = []; // This will be the resulting array
+        
+        for(var key in data) {
+          var entry = data[key];
+          entry.id = key; 
+          dataAsArray.push(entry);
+        }
+        
+        self.data = dataAsArray;
+
+        //console.log(self.data[80]["Totalt antal brott"]["helår totalt"]);
+        
+        draw(self.data);
+    });
+
+    var insertLinebreaks = function (d) {
+        var el = d3.select(this);
+        var words = d.split(' ');
+        el.text('');
+
+        for (var i = 0; i < words.length; i++) {
+            var tspan = el.append('tspan').text(words[i]);
+            if (i > 0)
+                tspan.attr('x', 0).attr('dy', '15');
+        }
+    };
+
+    function draw(dataSet){
+>>>>>>> c15242f8b6588a8e57c122a3988e539867a2a22d
         
         var color = d3.scale.category10();
 
@@ -61,7 +97,21 @@ function ParallelCoords()
         background = svg.append("svg:g")
             .attr("class", "background")
             .selectAll("path")
-            .data(self.data)
+            .data(function(){
+                var data = [];
+                for(var key in dataSet)
+                {
+                    var currentObj = dataSet[key];
+
+                    for(var key2 in currentObj)
+                    {
+                        var currentObj2 = currentObj[key2];
+                        data.push(currentObj2["helår totalt"]);  
+                    }
+                                   
+                }
+                return +data;
+            })
             .enter().append("svg:path")
             .attr("d", path);
                 
@@ -69,7 +119,22 @@ function ParallelCoords()
         foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
-            .data(self.data)
+            .data(function(){
+                var data = [];
+                for(var key in dataSet)
+                {
+                    var currentObj = dataSet[key];
+
+                    for(var key2 in currentObj)
+                    {
+                        var currentObj2 = currentObj[key2];
+                        data.push(currentObj2["helår totalt"]);  
+                    }
+                                   
+                }
+                //console.log(data);
+                return +data;
+            })
             .enter().append("svg:path")
             .attr("d", path)
             .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; })
@@ -90,11 +155,7 @@ function ParallelCoords()
                .duration(500)
                .style("opacity", 0);
                  
-            }); 
-            //.style("stroke", function(d,i){ return color(kmeansRes[i])});
-            //Assign the cluster colors
-            //..
-    
+            });   
 
         // Add a group element for each dimension.
         var g = svg.selectAll(".dimension")
@@ -110,8 +171,15 @@ function ParallelCoords()
             .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
             .append("svg:text")
             .attr("text-anchor", "middle")
+<<<<<<< HEAD
             .attr("y", -9)
             .text(String);
+=======
+            .attr("y", -50)
+            .text(String)
+            .each(insertLinebreaks)
+            .style("font-size", "7pt").style("vertical-align", "bottom"); //Doesn't work, check later
+>>>>>>> c15242f8b6588a8e57c122a3988e539867a2a22d
 
         // Add and store a brush for each axis.
         g.append("svg:g")
