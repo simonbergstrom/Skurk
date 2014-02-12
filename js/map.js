@@ -41,11 +41,12 @@ function Map(){
 	g = svg.append("g");
 	
 	// Load crime data
-    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+    /*d3.json("data/crime_monthly_municipatalities_2013.json", function(json) {
 
-    	
+    	console.log(json);
+    	//console.log(json['Borås']['Våldsbrott']);
 			
-	});
+	});*/
 
 	// Load geographic data
     d3.json("data/swe_mun.json", function(error, sweden) {
@@ -67,7 +68,7 @@ function Map(){
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            .attr("class", function(d) { quantize(d); })
+            //.attr("class", function(d) { quantize(d); })
             /*.style("fill", function(d) {
             	var R = parseInt(Math.random()*255);
             	var G = parseInt(Math.random()*255);
