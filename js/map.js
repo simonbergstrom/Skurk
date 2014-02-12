@@ -41,24 +41,11 @@ function Map(){
 	g = svg.append("g");
 	
 	// Load crime data
-    /*d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 
-    	var crimeData = {};
-    	var test = csv.map(function(d) { 
-    		//console.log(d['kommun']);
-    		var values = {};
-    		var types = {};
-    		
-    		values['Helår'] = d['Helår'] 
-    		crimeData
-
-    		return values;
-    	});
-    	console.log(test);
-    	//console.log(test);
-		//crimeData = csv;
+    	
 			
-	});*/
+	});
 
 	// Load geographic data
     d3.json("data/swe_mun.json", function(error, sweden) {

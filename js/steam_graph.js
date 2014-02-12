@@ -63,7 +63,7 @@ function SteamGraph(){
         .append("text")
         .attr("class", "label")
         .attr("x", width)
-        .attr("y", -6).text("Years").attr("transform","translate(-20,25)");
+        .attr("y", -6).text("Year").attr("transform","translate(-10,25)");
         
     // Add y axis and title.
     svg.append("g")
@@ -73,7 +73,7 @@ function SteamGraph(){
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(10,10)");    
+        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(-40,-10)");    
  
 	svg.selectAll("path")
 	    .data(layers0)
