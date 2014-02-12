@@ -33,9 +33,9 @@ function ParallelCoords()
     //Load the data
     var realData = "data/crime_monthly_municipatalities_2013.csv";
     var testData = "data/testdata.csv";
-    var realData2 = "data/crime_monthly_municipatalities_2013.json"
+    var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
-    /*d3.csv(testData, function(data) {
+    d3.csv(testData, function(data) {
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
@@ -51,39 +51,7 @@ function ParallelCoords()
         self.data = data;
         
         draw();
-    });*/
-
-    d3.json(realData2, function(data) {
-        // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(data["Ale"]).filter(function(d) {
-            return (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) { return +p[d]; }))
-        
-                //assign the the axis scale  between [0 1]
-                //...
-        
-                .range([height, 0])
-                ); 
-        }));
-        
-        self.data = data;
-
-        console.log(self.data);
-        
-        draw();
     });
-
-    var insertLinebreaks = function (d) {
-        var el = d3.select(this);
-        var words = d.split(' ');
-        el.text('');
-
-        for (var i = 0; i < words.length; i++) {
-            var tspan = el.append('tspan').text(words[i]);
-            if (i > 0)
-                tspan.attr('x', 0).attr('dy', '15');
-        }
-    };
 
     function draw(){
         
@@ -143,8 +111,7 @@ function ParallelCoords()
             .append("svg:text")
             .attr("text-anchor", "middle")
             .attr("y", -9)
-            .text(String)
-            .style("font-size", "7pt");
+            .text(String);
 
         // Add and store a brush for each axis.
         g.append("svg:g")

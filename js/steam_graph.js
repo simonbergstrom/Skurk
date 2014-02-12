@@ -17,23 +17,27 @@ function SteamGraph(){
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
     /********* Ladda in data **********/
-    /*d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
-    // Extract the list of dimensions and create a scale for each.
-    x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-        return (y[d] = d3.scale.linear()
-            .domain(d3.extent(data, function(p) { return +p[d]; }))
-    
-            //assign the the axis scale  between [0 1]
-            //...
-    
-            .range([height, 0])
-            ); 
-    }));
-    
-    self.data = data;
-    
-    });*/
+    var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
+    /*d3.json(realData2, function(data) {
+        // Extract the list of dimensions and create a scale for each.
+        x.domain(dimensions = d3.keys(data["Ale"]).filter(function(d) {
+            return (y[d] = d3.scale.linear()
+                .domain(d3.extent(data, function(p) { return +p[d]; }))
+        
+                //assign the the axis scale  between [0 1]
+                //...
+        
+                .range([height, 0])
+                ); 
+        }));
+        
+        self.data = data;
+
+        console.log("Test " + data[0]);
+        
+        draw();
+    });*/
 
     /********* Tooltip ***********/
     var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
@@ -68,59 +72,63 @@ function SteamGraph(){
 	    .y0(function(d) { return y(d.y0); })
 	    .y1(function(d) { return y(d.y0 + d.y); });
 
-	var svg = d3.select("#steamGraph").append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height+ margin.top + margin.bottom)
-	    .append("g")
-        .attr("transform", "translate(" + margin.left + "," + (-10) + ")");
 
-    // Add x axis and title.
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .append("text")
-        .attr("class", "label")
-        .attr("x", width)
-        .attr("y", -6).text("Year").attr("transform","translate(-10,25)");
-        
-    // Add y axis and title.
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em").text("Municipalities").attr("transform","translate(-25,190)rotate(-90)");    
- 
-	svg.selectAll("path")
-	    .data(layers0)
-	  .enter().append("path")
-	    .attr("d", area)
-	    .attr("transform", "translate(0," + padding + ")")
-	    .style("fill", function() { return color(Math.random()); })
-	/****** Tool tip *********/
+	//function draw()
+	//{    
+		var svg = d3.select("#steamGraph").append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height+ margin.top + margin.bottom)
+		    .append("g")
+	        .attr("transform", "translate(" + margin.left + "," + (-10) + ")");
 
-        .on("mousemove", function(d, i) {
-        //... 
-    	tooltip.transition()
-       .duration(200)
-       .style("opacity", .9);
-    	tooltip.html("Layer " + i)
-       .style("left", (d3.event.pageX + 5) + "px")
-       .style("top", (d3.event.pageY - 28) + "px");    
-	    })
-	    .on("mouseout", function(d) {
+	    // Add x axis and title.
+	    svg.append("g")
+	        .attr("class", "x axis")
+	        .attr("transform", "translate(0," + height + ")")
+	        .call(xAxis)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("x", width)
+	        .attr("y", -6).text("Year").attr("transform","translate(-10,25)");
+	        
+	    // Add y axis and title.
+	    svg.append("g")
+	        .attr("class", "y axis")
+	        .call(yAxis)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("transform", "rotate(-90)")
+	        .attr("y", 6)
+	        .attr("dy", ".71em").text("Municipalities").attr("transform","translate(-25,190)rotate(-90)");    
+	 
+		svg.selectAll("path")
+		    .data(layers0)
+		  .enter().append("path")
+		    .attr("d", area)
+		    .attr("transform", "translate(0," + padding + ")")
+		    .style("fill", function() { return color(Math.random()); })
+		/****** Tool tip *********/
+
+	        .on("mousemove", function(d, i) {
 	        //... 
-	        tooltip.transition()
-	       .duration(500)
-	       .style("opacity", 0);  
-	    })
-	    .on("click",  function(d) {
-            //... 
-            selFeature(d);   
-        });
+	    	tooltip.transition()
+	       .duration(200)
+	       .style("opacity", .9);
+	    	tooltip.html("Layer " + i)
+	       .style("left", (d3.event.pageX + 5) + "px")
+	       .style("top", (d3.event.pageY - 28) + "px");    
+		    })
+		    .on("mouseout", function(d) {
+		        //... 
+		        tooltip.transition()
+		       .duration(500)
+		       .style("opacity", 0);  
+		    })
+		    .on("click",  function(d) {
+	            //... 
+	            selFeature(d);   
+	        });
+	//}
 
 	//function transition() {
 	  //d3.selectAll("path")
