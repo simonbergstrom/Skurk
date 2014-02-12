@@ -2,6 +2,7 @@ function Map(){
 
 	// Initalization
 
+	var crimeData;
 	var mapDiv = $("#map");
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 	var width = mapDiv.width() - margin.right - margin.left + 35;
@@ -20,7 +21,7 @@ function Map(){
  		.style("position", "absolute") 
 		.style("z-index", "10")
         .style("border", 3 + "px solid #000000")
-        .style("width", 147 + "px")
+        .style("width", 30.3 + "%")
         .style("height", 35 + "px")
         .style("left", 70 + "%")
         .style("top", 95 + "%")
@@ -39,34 +40,53 @@ function Map(){
 
 	g = svg.append("g");
 	
+	// Load crime data
+    /*d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 
+    	var crimeData = {};
+    	var test = csv.map(function(d) { 
+    		//console.log(d['kommun']);
+    		var values = {};
+    		var types = {};
+    		
+    		values['Helår'] = d['Helår'] 
+    		crimeData
 
-	// Load map data
+    		return values;
+    	});
+    	console.log(test);
+    	//console.log(test);
+		//crimeData = csv;
+			
+	});*/
+
+	// Load geographic data
     d3.json("data/swe_mun.json", function(error, sweden) {
 
-    	var data = topojson.feature(sweden, sweden.objects.swe_mun).features;
-		draw(data);   
+    	var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
+		draw(geoData);   
 
     });
 
 
 
     // Draw map
-    function draw(data) {
+    function draw(geoData) {
 
-    	var kommuner = g.selectAll(".name").data(data);
+    	var kommuner = g.selectAll(".name").data(geoData);
 
     	kommuner.enter().insert("path")
             .attr("class", "kommuner")
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            .style("fill", function(d) {
+            .attr("class", function(d) { quantize(d); })
+            /*.style("fill", function(d) {
             	var R = parseInt(Math.random()*255);
             	var G = parseInt(Math.random()*255);
             	var B = parseInt(Math.random()*255);
                 return 'RGB(' + R + ',' + G + ',' + B + ')'; 
-            })
+            })*/
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
                 
@@ -87,7 +107,8 @@ function Map(){
 
     			infoBox.html("");
 
-            });
+        });
+		
 
     }
 
@@ -103,7 +124,8 @@ function Map(){
     }
 
     function quantize(d) {
-		return "q" + Math.min(8, ~~(data[d.id] * 9 / 12)) + "-9";
+    	//console.log(d.properties.name);
+		//return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
 	}
 
 
