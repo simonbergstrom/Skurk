@@ -41,20 +41,18 @@ function Map(){
 	g = svg.append("g");
 	
 	// Load crime data
-    /*d3.json("data/crime_monthly_municipatalities_2013.json", function(json) {
+    d3.json("data/crime_monthly_municipatalities_2013.json", function(data) {
+        crimeData = data;
 
-    	console.log(json);
-    	//console.log(json['Borås']['Våldsbrott']);
-			
-	});*/
+        // Load geographic data
+        d3.json("data/swe_mun.json", function(error, sweden) {
 
-	// Load geographic data
-    d3.json("data/swe_mun.json", function(error, sweden) {
+            var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
+            draw(geoData);   
 
-    	var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
-		draw(geoData);   
+        });
 
-    });
+	});
 
 
 
@@ -68,7 +66,7 @@ function Map(){
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            //.attr("class", function(d) { quantize(d); })
+            .attr("class", function(d) { quantize(d); })
             /*.style("fill", function(d) {
             	var R = parseInt(Math.random()*255);
             	var G = parseInt(Math.random()*255);
@@ -112,7 +110,8 @@ function Map(){
     }
 
     function quantize(d) {
-    	//console.log(d.properties.name);
+        //console.log(d.properties.name);
+    	//console.log(crimeData[d.properties.name]);
 		//return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
 	}
 

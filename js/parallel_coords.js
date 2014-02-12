@@ -68,7 +68,7 @@ function ParallelCoords()
         
         self.data = data;
 
-        console.log(self.data);
+        //console.log(self.data);
         
         draw();
     });
