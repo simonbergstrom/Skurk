@@ -59,6 +59,7 @@ function ParallelCoords()
         self.data = dataAsArray;
 
         //console.log(self.data[80]["Totalt antal brott"]["helår totalt"]);
+
         
         draw(self.data);
     });

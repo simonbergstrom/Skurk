@@ -17,7 +17,7 @@ function SteamGraph(){
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
 
     /********* Ladda in data **********/
-    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
+    /*d3.csv("data/crime_monthly_municipatalities_2013.csv", function(data) {
     // Extract the list of dimensions and create a scale for each.
     x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
         return (y[d] = d3.scale.linear()
@@ -32,7 +32,7 @@ function SteamGraph(){
     
     self.data = data;
     
-    });
+    });*/
 
 
     /********* Tooltip ***********/
@@ -92,7 +92,7 @@ function SteamGraph(){
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("dy", ".71em").text("Number of lines?").attr("transform","translate(-40,-10)");    
+        .attr("dy", ".71em").text("Municipalities").attr("transform","translate(-25,190)rotate(-90)");    
  
 	svg.selectAll("path")
 	    .data(layers0)

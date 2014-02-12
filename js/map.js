@@ -41,19 +41,18 @@ function Map(){
 	g = svg.append("g");
 	
 	// Load crime data
-    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+    d3.json("data/crime_monthly_municipatalities_2013.json", function(data) {
+        crimeData = data;
 
-    	
-			
+        // Load geographic data
+        d3.json("data/swe_mun.json", function(error, sweden) {
+
+            var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
+            draw(geoData);   
+
+        });
+
 	});
-
-	// Load geographic data
-    d3.json("data/swe_mun.json", function(error, sweden) {
-
-    	var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
-		draw(geoData);   
-
-    });
 
 
 
@@ -111,8 +110,9 @@ function Map(){
     }
 
     function quantize(d) {
-    	//console.log(d.properties.name);
-		//return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
+        //console.log(crimeData["Hela landet"]);
+    	//console.log(crimeData[d.properties.name]);
+		return "q" + Math.min(8, ~~(crimeData[d.id] * 9 / 12)) + "-5";
 	}
 
 
