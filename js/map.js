@@ -36,14 +36,30 @@ function Map(){
 		.style("z-index", "10")
         .style("border", 3 + "px solid #000000")
         .style("width", 35 + "%")
-        .style("height", 35 + "px")
+        .style("height", 135 + "px")
         .style("left", 65.5 + "%")
-        .style("top", 95 + "%")
+        .style("top", 65 + "%")
         .style("font-size", 20 + 'px')
         .style("color", '#FFFFFF')
         .style("background-color", '#555555')
-        .style("padding-left", 3 + 'px')
-	    .text("");
+        .style("padding-left", 3 + 'px');
+	    //.text("Kommun");
+
+    var infoText = infoBox.insert("div")
+        .style("z-index", "20")
+        .text("Kommun");
+
+    infoBox.insert("div")
+        .style("width", 10 + "px")
+        .style("height", 10 + "px")
+        .style("z-index", "20")
+        .style("background-color", "#FF0000")
+
+    infoBox.insert("div")
+        .style("width", 10 + "px")
+        .style("height", 10 + "px")
+        .style("z-index", "20")
+        .style("background-color", "#FF0000")
 
     var projection = d3.geo.mercator()
         .center([31, 64.5 ])
@@ -106,11 +122,7 @@ function Map(){
                  d3.select(this).transition().duration(100)
     				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });
 
-                infoBox.transition()        
-                    .duration(200)      
-                    .style("opacity", 1.0);  
-
-                infoBox.html(d.properties.name);
+                infoText.html(d.properties.name);
                     
             })
             .on("mouseout",  function(d) {
@@ -118,7 +130,7 @@ function Map(){
             	d3.select(this).transition().duration(100)
     				.style({ 'fill-opacity':1.0,'stroke-opacity':0.0 });
 
-    			infoBox.html("");
+    			infoText.html("Kommun");
 
         });
 		
