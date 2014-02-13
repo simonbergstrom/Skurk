@@ -11,7 +11,7 @@ function ParallelCoords()
 
     var pcDiv = $("#parallelCoords");
 
-    var margin = [60, 0, 50, 0],
+    var margin = [60, 0, 50, 10],
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
 
@@ -35,15 +35,17 @@ function ParallelCoords()
     var testData = "data/testdata.csv";
     var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
-    var dataToGet = "januari total";
+    var dataToGet = "helår /100000";
 
 d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+
 //crimeData = data;
     //console.log(csv);
 
-    var crimeDataJson = [];
 
-    for (var i = 0; i < csv.length; i+=10) 
+    var newData = [];
+
+    for (var i = 10; i < csv.length; i+=10) 
     {    
         var crimeType = {};
         for (var j = 0; j < 10; j++) 
@@ -51,11 +53,11 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
             crimeType['kommun'] = csv[i+j]['kommun'];        
             crimeType[csv[i+j]['typ']] = csv[i+j][dataToGet];
         }
-        crimeDataJson[i/10] = crimeType;
+        newData[(i/10)-10] = crimeType;
     }
-    //console.log((crimeDataJson));
 
-    self.data = crimeDataJson;
+
+    self.data = newData;
 
     x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             return d != "kommun" && (y[d] = d3.scale.linear()
@@ -81,7 +83,7 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
     function draw(){
 
         
-        var color = d3.scale.category10();
+        var color = d3.scale.category20();
 
         // Add grey background lines for context.
         background = svg.append("svg:g")
@@ -98,12 +100,13 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; })
+            .style("stroke", function(d) { return color(d['kommun']); })
+            
             .on("mousemove", function(d) {
                 //...
                tooltip.transition()
                .duration(200)
-               .style("opacity", .9);
+               .style("opacity", 1);
                 tooltip.html(d['kommun'])
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
@@ -132,7 +135,7 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
             .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
             .append("svg:text")
             .attr("text-anchor", "middle")
-            .attr("y", -50)
+            .attr("y", -40)
             .text(String)
             .each(insertLinebreaks)
             .style("font-size", "7pt").style("vertical-align", "bottom"); //Doesn't work, check later
