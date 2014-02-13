@@ -10,8 +10,8 @@ function SteamGraph(){
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
    
-	var n = 20, // number of layers
-    m = 200, // number of samples per layer
+	var n = 120, // number of layers
+    m = 2000, // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
     layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
