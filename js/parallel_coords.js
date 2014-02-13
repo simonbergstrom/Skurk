@@ -38,7 +38,11 @@ function ParallelCoords()
     var dataToGet = "helår /100000";
 
 
+
     d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+//crimeData = data;
+    //console.log(csv);
+
 
         var newData = [];
 
@@ -55,10 +59,11 @@ function ParallelCoords()
 
         self.data = newData;
 
+
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-                return d != "kommun" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(self.data, function(p) { return +p[d]; }))
-                .range([height, 0]));
+            return d != "kommun" && (y[d] = d3.scale.linear()
+            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+            .range([height, 0]));
         }));
 
         draw();

@@ -2,7 +2,9 @@ function SteamGraph(){
 
 	var self = this; // for internal d3 functions
 
-	var padding = -15; // pad the plot on the Y-Axis... 
+	var x,y;
+
+	var padding = -30; // pad the plot on the Y-Axis... 
 
     var steamGraphDiv = $("#steamGraph");
 
@@ -10,72 +12,98 @@ function SteamGraph(){
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
    
-	var n = 290, // number of layers
-    m = 200, // number of samples per layer
+	var n = 30, // number of layers
+    m = 100; // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
     //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+    //console.log(layers0);
 
 
     /********* Ladda in data **********/
-    var realData2 = "data/crime_monthly_municipatalities_2013.json";
+	d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 
-    /*d3.json(realData2, function(data) {
-        // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(data["Ale"]).filter(function(d) {
-            return (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) { return +p[d]; }))
-        
-                //assign the the axis scale  between [0 1]
-                //...
-        
-                .range([height, 0])
-                ); 
-        }));
-        
-        self.data = data;
+	    var crimeDataJson = [];
 
-        console.log("Test " + data[0]);
-        
-        draw();
-    });*/
+	    for (var i = 0; i < csv.length; i+=10) 
+	    {    
+	        var crimeType = {};
+	        for (var j = 0; j < 10; j++) 
+	        {        
+	            crimeType['kommun'] = csv[i+j]['kommun'];        
+	            crimeType[csv[i+j]['typ']] = csv[i+j]['januari total'];
+	        }
+	        crimeDataJson[i/10] = crimeType;
+	    }
+	    self.data = crimeDataJson;
 
+	    //console.log(crimeDataJson);
+
+	    //var crimeDataJsonSteam = layering(crimeDataJson);
+	    /*
+	    n = crimeDataJson[0];
+	    n = Object.keys(n).length -1; // Antal brottskategorier.. tar bort kolumn för kommun 
+	    m = crimeDataJson.length;     // Antal sampel....
+
+	    stack = d3.layout.stack().offset("wiggle"),
+    	layers0 = stack(d3.range(n).map(function() { return layering(crimeDataJson); })); */
+
+	    //X-axel
+		/*x = d3.scale.linear()
+		    .domain([0, m - 1])
+		    .range([0, width]);    
+
+		//Y-axel
+		y = d3.scale.linear()
+		    .domain([0, d3.max(layers0/*.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+		    .range([height, 0]);*/
+
+	   	/* x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+	            return d != "kommun" && (y[d] = d3.scale.linear()
+	            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+	            .range([height, 0])); 
+	    }));*/
+
+	    draw();
+	});
+	
+
+	function draw()
+	{
     /********* Tooltip ***********/
-    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
+	    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
-    //X-axel
-	var x = d3.scale.linear()
-	    .domain([0, m - 1])
-	    .range([0, width]);    
+	    //X-axel
+		var x = d3.scale.linear()
+		    .domain([0, m - 1])
+		    .range([0, width]);    
 
-	//Y-axel
-	var y = d3.scale.linear()
-	    .domain([0, d3.max(layers0/*.concat(layers1)*/, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
-	    .range([height, 0]);
+		//Y-axel
+		var y = d3.scale.linear()
+		    .domain([0, d3.max(layers0/*.concat(layers1)*/, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+		    .range([height, 0]);
 
-	// Färg på plotten
-	var color = d3.scale.category20b();
+		// Färg på plotten
+		var color = d3.scale.category20b();
 
-	// Create the axis..
-	var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+		// Create the axis..
+		var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
+	    var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
 
-    //Ta bort skala på Y-axel...
-    yAxis.tickFormat("");
+	    //Ta bort skala på Y-axel...
+	    yAxis.tickFormat("");
 
-	var area = d3.svg.area()
-	    .x(function(d) { return x(d.x); })
-	    .y0(function(d) { return y(d.y0); })
-	    .y1(function(d) { return y(d.y0 + d.y); });
+		var area = d3.svg.area()
+		    .x(function(d) { return x(d.x); })
+		    .y0(function(d) { return y(d.y0); })
+		    .y1(function(d) { return y(d.y0 + d.y); });
 
-
-	//function draw()
-	//{    
+   
 		var svg = d3.select("#steamGraph").append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height+ margin.top + margin.bottom)
@@ -104,7 +132,8 @@ function SteamGraph(){
 	 
 		svg.selectAll("path")
 		    .data(layers0)
-		  .enter().append("path")
+		  	
+		  	.enter().append("path")
 		    .attr("d", area)
 		    .attr("transform", "translate(0," + padding + ")")
 		    .style("fill", function() { return color(Math.random()); })
@@ -135,9 +164,9 @@ function SteamGraph(){
 		    })
 		    .on("click",  function(d) {
 	            //... 
-	            selFeature(d);   
+	            //selFeature(d);   
 	        });
-	//}
+	}
 
 	//function transition() {
 	  //d3.selectAll("path")
@@ -168,4 +197,20 @@ function SteamGraph(){
 	  for (i = 0; i < 5; ++i) bump(a);
 	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
+
+	// Formatera datan så varje objekt innehåller ett y,y0,x värde....
+	function layering(z)
+	{
+		var result  = new Array(); 
+		var x,y,y0;
+
+		// Gå igenom hela arrayen o spara objekt med x,y0 och y värden i...
+		for(var i=0;i<z.length;i++)
+		{
+
+		}	
+
+		return result; 
+	}
+
 }
