@@ -37,31 +37,32 @@ function ParallelCoords()
 
     var dataToGet = "helår /100000";
 
-d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 
-    var newData = [];
+    d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 
-    for (var i = 10; i < csv.length; i+=10) 
-    {    
-        var crimeType = {};
-        for (var j = 0; j < 10; j++) 
-        {        
-            crimeType['kommun'] = csv[i+j]['kommun'];        
-            crimeType[csv[i+j]['typ']] = csv[i+j][dataToGet];
+        var newData = [];
+
+        for (var i = 10; i < csv.length; i+=10) 
+        {    
+            var crimeType = {};
+            for (var j = 0; j < 10; j++) 
+            {        
+                crimeType['kommun'] = csv[i+j]['kommun'];        
+                crimeType[csv[i+j]['typ']] = csv[i+j][dataToGet];
+            }
+            newData[(i/10)-10] = crimeType;
         }
-        newData[(i/10)-10] = crimeType;
-    }
 
-    self.data = newData;
+        self.data = newData;
 
-    x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-            return d != "kommun" && (y[d] = d3.scale.linear()
-            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
-            .range([height, 0]));
-    }));
+        x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+                return d != "kommun" && (y[d] = d3.scale.linear()
+                .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+                .range([height, 0]));
+        }));
 
-    draw();
-});
+        draw();
+    });
 
     var insertLinebreaks = function (d) {
         var el = d3.select(this);
@@ -159,5 +160,6 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
             }) ? null : "none";
         });
     }
+
 }
 
