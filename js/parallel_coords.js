@@ -39,7 +39,7 @@ function ParallelCoords()
 
 d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
 //crimeData = data;
-    console.log(csv);
+    //console.log(csv);
 
     var crimeDataJson = [];
 
@@ -53,7 +53,7 @@ d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
         }
         crimeDataJson[i/10] = crimeType;
     }
-    console.log((crimeDataJson));
+    //console.log((crimeDataJson));
 
     self.data = crimeDataJson;
 
