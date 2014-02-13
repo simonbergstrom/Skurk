@@ -35,41 +35,36 @@ function ParallelCoords()
     var testData = "data/testdata.csv";
     var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
-    var dataToGet = "helår totalt";
+    var dataToGet = "januari total";
 
-    d3.json(realData2, function(data) {
-        var newData = {};
+d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+//crimeData = data;
+    console.log(csv);
 
-        //console.log(data);
+    var crimeDataJson = [];
 
-        for(var key in data)
-        {
-            var currentObj = data[key];
-            var nyttObj = {};
-
-            for(var key2 in currentObj)
-            {
-                //console.log(key2);
-                //newData[key] = key2;
-                nyttObj[key2] = currentObj[key2][dataToGet];
-            }
-
-            newData[key] = nyttObj;
+    for (var i = 0; i < csv.length; i+=10) 
+    {    
+        var crimeType = {};
+        for (var j = 0; j < 10; j++) 
+        {        
+            crimeType['kommun'] = csv[i+j]['kommun'];        
+            crimeType[csv[i+j]['typ']] = csv[i+j][dataToGet];
         }
-            self.data = data;
+        crimeDataJson[i/10] = crimeType;
+    }
+    console.log((crimeDataJson));
 
-        // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(self.data["Ale"]).filter(function(d) {
-            return (y[d] = d3.scale.linear()
-                .domain(d3.extent(self.data, function(p) { return +p[d]; }))       
-                .range([height, 0])
-                ); 
-        })); 
+    self.data = crimeDataJson;
 
-        //console.log(self.data[80]["Totalt antal brott"]["helår totalt"]);
-        
-        draw();
-    });
+    x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+            return d != "kommun" && (y[d] = d3.scale.linear()
+            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+            .range([height, 0]));
+    }));
+
+    draw();
+});
 
     var insertLinebreaks = function (d) {
         var el = d3.select(this);
@@ -83,7 +78,7 @@ function ParallelCoords()
         }
     };
 
-    function draw(dataSet){
+    function draw(){
 
         
         var color = d3.scale.category10();
@@ -109,7 +104,7 @@ function ParallelCoords()
                tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-                tooltip.html("Test")
+                tooltip.html(d['kommun'])
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
 
