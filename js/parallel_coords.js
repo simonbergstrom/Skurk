@@ -35,32 +35,61 @@ function ParallelCoords()
     var testData = "data/testdata.csv";
     var realData2 = "data/crime_monthly_municipatalities_2013.json"
 
-    d3.json(realData2, function(data) {
+    var dataToGet = "helår totalt";
+
+     /*d3.csv(realData, function(data) {
+
+
+
+        self.data = data;
+        console.log(self.data);
+
         // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(data["Ale"]).filter(function(d) {
+        //...
+         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             return (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) { return +p[d]; }))
-        
-                //assign the the axis scale  between [0 1]
-                //...
-        
-                .range([height, 0])
-                ); 
+            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+            .range([height, 0]));
         }));
 
-        var dataAsArray = []; // This will be the resulting array
-        
-        for(var key in data) {
-          var entry = data[key];
-          entry.id = key; 
-          dataAsArray.push(entry);
+        draw();
+    });*/
+
+    d3.json(realData2, function(data) {
+        var newData = {};
+
+        //console.log(data);
+
+        for(var key in data)
+        {
+            var currentObj = data[key];
+            var nyttObj = {};
+
+            for(var key2 in currentObj)
+            {
+                //console.log(key2);
+                //newData[key] = key2;
+                nyttObj[key2] = currentObj[key2][dataToGet];
+            }
+
+            newData[key] = nyttObj;
         }
+        self.data = newData;
         
-        self.data = dataAsArray;
+        console.log(newData);
+
+
+        // Extract the list of dimensions and create a scale for each.
+        x.domain(dimensions = d3.keys(self.data["Ale"]).filter(function(d) {
+            return (y[d] = d3.scale.linear()
+                .domain(d3.extent(self.data, function(p) { return +p[d]; }))       
+                .range([height, 0])
+                ); 
+        })); 
 
         //console.log(self.data[80]["Totalt antal brott"]["helår totalt"]);
         
-        draw(self.data);
+        draw();
     });
 
     var insertLinebreaks = function (d) {
@@ -71,11 +100,11 @@ function ParallelCoords()
         for (var i = 0; i < words.length; i++) {
             var tspan = el.append('tspan').text(words[i]);
             if (i > 0)
-                tspan.attr('x', 0).attr('dy', '15');
+                tspan.attr('x', 0).attr('dy', '10');
         }
     };
 
-    function draw(dataSet){
+    function draw(){
         
         var color = d3.scale.category10();
 
@@ -83,21 +112,7 @@ function ParallelCoords()
         background = svg.append("svg:g")
             .attr("class", "background")
             .selectAll("path")
-            .data(function(){
-                var data = [];
-                for(var key in dataSet)
-                {
-                    var currentObj = dataSet[key];
-
-                    for(var key2 in currentObj)
-                    {
-                        var currentObj2 = currentObj[key2];
-                        data.push(currentObj2["helår totalt"]);  
-                    }
-                                   
-                }
-                return +data;
-            })
+            .data(self.data)
             .enter().append("svg:path")
             .attr("d", path);
                 
@@ -105,22 +120,7 @@ function ParallelCoords()
         foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
-            .data(function(){
-                var data = [];
-                for(var key in dataSet)
-                {
-                    var currentObj = dataSet[key];
-
-                    for(var key2 in currentObj)
-                    {
-                        var currentObj2 = currentObj[key2];
-                        data.push(currentObj2["helår totalt"]);  
-                    }
-                                   
-                }
-                //console.log(data);
-                return +data;
-            })
+            .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
             .style("stroke", function(d) { return "hsl(" + Math.random() * 360 + ",100%,50%)"; })
