@@ -10,11 +10,12 @@ function SteamGraph(){
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
    
-	var n = 120, // number of layers
-    m = 2000, // number of samples per layer
+	var n = 290, // number of layers
+    m = 200, // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
-    layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
-    layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+    layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+    //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+
 
     /********* Ladda in data **********/
     var realData2 = "data/crime_monthly_municipatalities_2013.json";
@@ -45,11 +46,11 @@ function SteamGraph(){
     //X-axel
 	var x = d3.scale.linear()
 	    .domain([0, m - 1])
-	    .range([0, width]);
+	    .range([0, width]);    
 
 	//Y-axel
 	var y = d3.scale.linear()
-	    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+	    .domain([0, d3.max(layers0/*.concat(layers1)*/, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 	    .range([height, 0]);
 
 	// Färg på plotten
@@ -111,6 +112,10 @@ function SteamGraph(){
 
 	        .on("mousemove", function(d, i) {
 	        //... 
+	        d3.select(this).transition().duration(100)
+    				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });	
+
+
 	    	tooltip.transition()
 	       .duration(200)
 	       .style("opacity", .9);
@@ -120,6 +125,10 @@ function SteamGraph(){
 		    })
 		    .on("mouseout", function(d) {
 		        //... 
+
+		        d3.select(this).transition().duration(100)
+    				.style({ 'fill-opacity':1.0,'stroke-opacity':0.0 });
+
 		        tooltip.transition()
 		       .duration(500)
 		       .style("opacity", 0);  
