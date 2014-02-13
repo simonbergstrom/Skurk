@@ -33,27 +33,9 @@ function ParallelCoords()
     //Load the data
     var realData = "data/crime_monthly_municipatalities_2013.csv";
     var testData = "data/testdata.csv";
-    var realData2 = "data/crime_monthly_municipatalities_2013.json"
+    var realData2 = "data/crime_monthly_municipatalities_2013.json";
 
     var dataToGet = "helår totalt";
-
-     /*d3.csv(realData, function(data) {
-
-
-
-        self.data = data;
-        console.log(self.data);
-
-        // Extract the list of dimensions and create a scale for each.
-        //...
-         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-            return (y[d] = d3.scale.linear()
-            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
-            .range([height, 0]));
-        }));
-
-        draw();
-    });*/
 
     d3.json(realData2, function(data) {
         var newData = {};
@@ -74,10 +56,7 @@ function ParallelCoords()
 
             newData[key] = nyttObj;
         }
-        self.data = newData;
-        
-        console.log(newData);
-
+            self.data = data;
 
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(self.data["Ale"]).filter(function(d) {
@@ -104,7 +83,8 @@ function ParallelCoords()
         }
     };
 
-    function draw(){
+    function draw(dataSet){
+
         
         var color = d3.scale.category10();
 
