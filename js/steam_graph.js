@@ -12,34 +12,28 @@ function SteamGraph(){
         width = steamGraphDiv.width() - margin.right - margin.left,
         height = steamGraphDiv.height() - margin.top - margin.bottom;
    
-	var n = 30, // number of layers
-    m = 100; // number of samples per layer
+	var n = 9, // number of layers
+    m = 12; // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+    //console.log(layers0);
     //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
     //console.log(layers0);
 
 
     /********* Ladda in data **********/
-	d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+	d3.json("data/crime_monthly_municipatalities_2013.json", function(json) {
+
+		self.data = json;
 
 	    var crimeDataJson = [];
 
-	    for (var i = 0; i < csv.length; i+=10) 
-	    {    
-	        var crimeType = {};
-	        for (var j = 0; j < 10; j++) 
-	        {        
-	            crimeType['kommun'] = csv[i+j]['kommun'];        
-	            crimeType[csv[i+j]['typ']] = csv[i+j]['januari total'];
-	        }
-	        crimeDataJson[i/10] = crimeType;
-	    }
-	    self.data = crimeDataJson;
+	    n = 9; // Antal brottskategorier 
+	    m = 12; // Antal månader....
 
-	    //console.log(crimeDataJson);
+	    //console.log(json["Borås"]["Våldsbrott"]);
 
-	    //var crimeDataJsonSteam = layering(crimeDataJson);
+	    var crimeDataJsonSteam = layering(json);
 	    /*
 	    n = crimeDataJson[0];
 	    n = Object.keys(n).length -1; // Antal brottskategorier.. tar bort kolumn för kommun 
@@ -202,13 +196,25 @@ function SteamGraph(){
 	function layering(z)
 	{
 		var result  = new Array(); 
-		var x,y,y0;
+		
+		//var x,y,y0;
+		var dataPoint = {};
 
-		// Gå igenom hela arrayen o spara objekt med x,y0 och y värden i...
-		for(var i=0;i<z.length;i++)
+		var crimeAmount = " /100000";
+		var kommun = "Hela landet";
+
+		// Loopa antal kategorier = 9
+		/*for(var i = 0; i < z.length; i++)
 		{
+			var categories = new Array();
+			// Antal månader = 12
+			for(var j )
+			{
 
-		}	
+
+			}	
+
+		}	*/
 
 		return result; 
 	}
