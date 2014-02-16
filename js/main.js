@@ -2,7 +2,7 @@
 $( document ).ready(function() {
 
 
-	var steamGraph = new SteamGraph();
+	var streamGraph = new StreamGraph();
 
 	var parallelCoords = new ParallelCoords();
 

@@ -1,4 +1,4 @@
-function SteamGraph(){
+function StreamGraph(){
 
 	var self = this; // for internal d3 functions
 
@@ -6,11 +6,11 @@ function SteamGraph(){
 
 	var padding = -30; // pad the plot on the Y-Axis... 
 
-    var steamGraphDiv = $("#steamGraph");
+    var streamGraphDiv = $("#streamGraph");
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = steamGraphDiv.width() - margin.right - margin.left,
-        height = steamGraphDiv.height() - margin.top - margin.bottom;
+        width = streamGraphDiv.width() - margin.right - margin.left,
+        height = streamGraphDiv.height() - margin.top - margin.bottom;
    
 	var n = 9, // number of layers
     m = 12; // number of samples per layer
@@ -32,8 +32,9 @@ function SteamGraph(){
 	    m = 12; // Antal månader....
 
 	    //console.log(json["Borås"]["Våldsbrott"]);
+	    console.log(json["Hela landet"]);
 
-	    var crimeDataJsonSteam = layering(json);
+	    var crimeDataJsonStream = layering(json);
 	    /*
 	    n = crimeDataJson[0];
 	    n = Object.keys(n).length -1; // Antal brottskategorier.. tar bort kolumn för kommun 
@@ -74,7 +75,7 @@ function SteamGraph(){
 
 		//Y-axel
 		var y = d3.scale.linear()
-		    .domain([0, d3.max(layers0/*.concat(layers1)*/, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+		    .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 		    .range([height, 0]);
 
 		// Färg på plotten
@@ -92,13 +93,14 @@ function SteamGraph(){
 	    //Ta bort skala på Y-axel...
 	    yAxis.tickFormat("");
 
+	    // Definera arean på datan som ska representeras
 		var area = d3.svg.area()
 		    .x(function(d) { return x(d.x); })
 		    .y0(function(d) { return y(d.y0); })
 		    .y1(function(d) { return y(d.y0 + d.y); });
 
    
-		var svg = d3.select("#steamGraph").append("svg")
+		var svg = d3.select("#streamGraph").append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height+ margin.top + margin.bottom)
 		    .append("g")
@@ -122,7 +124,7 @@ function SteamGraph(){
 	        .attr("class", "label")
 	        .attr("transform", "rotate(-90)")
 	        .attr("y", 6)
-	        .attr("dy", ".71em").text("Municipalities").attr("transform","translate(-25,190)rotate(-90)");    
+	        .attr("dy", ".71em").text("Categories of crime").attr("transform","translate(-25,190)rotate(-90)");    
 	 
 		svg.selectAll("path")
 		    .data(layers0)
@@ -197,7 +199,7 @@ function SteamGraph(){
 	{
 		var result  = new Array(); 
 		
-		//var x,y,y0;
+		//x = position i x-led, y0= basposition i y-led.(baslinje), y = tjockhet på linjen
 		var dataPoint = {};
 
 		var crimeAmount = " /100000";
