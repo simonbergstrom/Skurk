@@ -16,9 +16,8 @@ function StreamGraph(){
     m = 12; // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
-    //console.log(layers0);
     //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
-    //console.log(layers0);
+  
 
 
     /********* Ladda in data **********/
@@ -32,7 +31,7 @@ function StreamGraph(){
 	    m = 12; // Antal månader....
 
 	    //console.log(json["Borås"]["Våldsbrott"]);
-	    console.log(json["Hela landet"]);
+	    //console.log(json["Hela landet"]);
 
 	    var crimeDataJsonStream = layering(json);
 	    /*
@@ -69,9 +68,13 @@ function StreamGraph(){
 	    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
 	    //X-axel
-		var x = d3.scale.linear()
-		    .domain([0, m - 1])
-		    .range([0, width]);    
+	    //Månader samt spridning 
+	    var months = ["Jan","Feb","Mars","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
+	    var diverse = [0,width/11, 2*width/11,3*width/11,4*width/11,5*width/11,6*width/11,7*width/11,8*width/11,9*width/11,10*width/11,width];
+
+		var x = d3.scale.ordinal()
+		    .domain(months)
+		    .range(diverse);    
 
 		//Y-axel
 		var y = d3.scale.linear()
@@ -114,7 +117,7 @@ function StreamGraph(){
 	        .append("text")
 	        .attr("class", "label")
 	        .attr("x", width)
-	        .attr("y", -6).text("Year").attr("transform","translate(-10,25)");
+	        .attr("y", -6).text("Month").attr("transform","translate(-15,0)");
 	        
 	    // Add y axis and title.
 	    svg.append("g")
