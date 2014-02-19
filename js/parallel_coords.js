@@ -81,20 +81,21 @@ function ParallelCoords()
     };
 
     function draw(){
-
+        svg.selectAll("path").remove();
+        svg.selectAll(".dimension").remove();
         
         var color = d3.scale.category20();
 
         // Add grey background lines for context.
-        background = svg.append("svg:g")
+            background = svg.append("svg:g")
             .attr("class", "background")
             .selectAll("path")
             .data(self.data)
             .enter().append("svg:path")
-            .attr("d", path);
+            .attr("d", path).style("stroke", "#555");
                 
         // Add blue foreground lines for focus.
-        foreground = svg.append("svg:g")
+            foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
             .data(self.data)
@@ -165,26 +166,39 @@ function ParallelCoords()
         });
     }
 
-    $("#workerTest").click(function(e){
-        d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
-            var worker = new Worker('js/loadDataWorker.js');
+    //Load new data
+    $(document).ready(function(){
 
-            worker.onmessage = function (event) {
-                self.data = event.data;
-                               
-            };
-            worker.postMessage(csv);
+        $(".category").click(function(e){
+            var category = $(this).text(); 
+            $("#chooseData").text(category);    
+           
+            d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+                     
+                var newData = [];
 
-            x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-                return d != "kommun" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(self.data, function(p) { return +p[d]; }))
-                .range([height, 0]));
-            }));
-        
-            draw();
-        });   
+                for (var i = 0; i < csv.length; i+=10) 
+                {    
+                    var crimeType = {};
+                    for (var j = 0; j < 10; j++) 
+                    {        
+                        crimeType['kommun'] = csv[i+j]['kommun'];        
+                        crimeType[csv[i+j]['typ']] = csv[i+j][category];
+                    }
+                    newData[(i/10)] = crimeType;
+                }
+
+                self.data = newData;
+                
+                x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+                    return d != "kommun" && (y[d] = d3.scale.linear()
+                    .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+                    .range([height, 0]));
+                }));
+                draw();                 
+            });   
+        });
     });
-
 
 }
 

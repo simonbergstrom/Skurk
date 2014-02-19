@@ -7,7 +7,7 @@
 .background path {
     fill: none;
     stroke: #ccc;
-    stroke-opacity: .2;
+    stroke-opacity: .1;
     shape-rendering: crispEdges;
 }
 
@@ -15,15 +15,17 @@
     fill: none;
     stroke: steelblue;
     stroke-opacity: .7;
-    stroke-width: 3px !important;
+    stroke-width: 2px !important;
 }
 
 .foreground path:hover{
     stroke-width: 6px !important;
+    stroke-opacity: 1 !important;
 }
 
 .background path:hover{
     stroke-width: 6px !important;
+    stroke-opacity: 1 !important;
 }
 
 .brush .extent {
@@ -50,4 +52,9 @@
 .axis text {
     text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
     font-size: 7pt;
+}
+
+.category
+{
+    cursor: pointer;
 }
