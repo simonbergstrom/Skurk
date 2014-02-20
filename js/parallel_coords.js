@@ -16,7 +16,8 @@ function ParallelCoords()
         height = pcDiv.height() - margin[0] - margin[2];
 
     var x = d3.scale.ordinal().rangePoints([0, width], 1),
-        y = {};
+        y = {},
+        dragAxis = {};
         
 
     var line = d3.svg.line(),
@@ -40,9 +41,6 @@ function ParallelCoords()
 
 
     d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
-//crimeData = data;
-    //console.log(csv);
-
 
         var newData = [];
 
@@ -91,10 +89,9 @@ function ParallelCoords()
             .attr("class", "background")
             .selectAll("path")
             .data(self.data)
-            .enter().append("svg:path")
-            .attr("d", path).style("stroke", "#555");
+            .enter().append("svg:path");
                 
-        // Add blue foreground lines for focus.
+        // Add colored lines for focus
             foreground = svg.append("svg:g")
             .attr("class", "foreground")
             .selectAll("path")
@@ -127,7 +124,32 @@ function ParallelCoords()
             .data(dimensions)
             .enter().append("svg:g")
             .attr("class", "dimension")
-            .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+            .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+            .call(d3.behavior.drag()
+            .on("dragstart", function(d) {
+              dragAxis[d] = this.__origin__ = x(d);
+              background.attr("visibility", "hidden");
+            })
+            .on("drag", function(d) {
+              dragAxis[d] = Math.min(width, Math.max(0, this.__origin__ += d3.event.dx));
+              foreground.attr("d", path);
+              dimensions.sort(function(a, b) { return position(a) - position(b); });
+              x.domain(dimensions);
+              g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+            })
+            .on("dragend", function(d) {
+              delete this.__origin__;
+              delete dragAxis[d];
+              transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+              transition(foreground)
+                  .attr("d", path);
+              background
+                  .attr("d", path)
+                  .transition()
+                  .delay(500)
+                  .duration(0)
+                  .attr("visibility", null);
+            }));
             
 
         // Add an axis and title.
@@ -139,7 +161,7 @@ function ParallelCoords()
             .attr("y", -40)
             .text(String)
             .each(insertLinebreaks)
-            .style("font-size", "7pt").style("vertical-align", "bottom"); //Doesn't work, check later
+            .style("font-size", "7pt"); //Doesn't work, check later
 
         // Add and store a brush for each axis.
         g.append("svg:g")
@@ -148,12 +170,24 @@ function ParallelCoords()
             .selectAll("rect")
             .attr("x", -8)
             .attr("width", 16);
+        
+    }
+
+    //Handles the dragging
+    function position(d) {
+        var v = dragAxis[d];
+        return v == null ? x(d) : v;
+    }
+
+    //The transition when dragging.
+    function transition(g) {
+        return g.transition().duration(500);
     }
 
     // Returns the path for a given data point.
     function path(d) {
-        return line(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
-    }
+  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+}
 
     // Handles a brush event, toggling the display of foreground lines.
     function brush() {

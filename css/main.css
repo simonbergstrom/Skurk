@@ -32,13 +32,13 @@ body {
 }
 
 #viewBottomLeft, #viewTopLeft {
-	border: 2px solid #555555;
+	border: 1px solid #555555;
 	height: 330px;
 
 }
 
 #viewRight {
-	border: 2px solid #555555;
+	border: 1px solid #555555;
 	height: 660px;
 
 }

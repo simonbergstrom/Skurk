@@ -5,17 +5,15 @@
 }
 
 .background path {
-    fill: none;
-    stroke: #ccc;
-    stroke-opacity: .1;
-    shape-rendering: crispEdges;
+  fill: none;
+  stroke: #ccc;
+  stroke-opacity: .4;
+  shape-rendering: crispEdges;
 }
 
 .foreground path {
-    fill: none;
-    stroke: steelblue;
-    stroke-opacity: .7;
-    stroke-width: 2px !important;
+  fill: none;
+  stroke-opacity: .7;
 }
 
 .foreground path:hover{
@@ -29,15 +27,20 @@
 }
 
 .brush .extent {
-    fill-opacity: .3;
-    stroke: #fff;
-    shape-rendering: crispEdges;
+  fill-opacity: .3;
+  stroke: #fff;
+  shape-rendering: crispEdges;
 }
 
-#parallelCoords .axis line, #parallelCoords .axis path {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
+#parallelCoords .axis line,#parallelCoords .axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
 }
 
 .tooltip
@@ -49,9 +52,10 @@
     border: 1px solid black;
 }
 
-.axis text {
+#parallelCoords .axis text {
     text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
     font-size: 7pt;
+    cursor: move;
 }
 
 .category
