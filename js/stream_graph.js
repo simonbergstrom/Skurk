@@ -4,7 +4,7 @@ function StreamGraph(){
 
 	var x,y;
 
-	var kommun = "Hela landet";
+	var kommun = "Gotland";
 	var kategori = ["Våldsbrott","Hot- kränknings- och frihetsbrott","Vårdslöshet- och vållandebrott","Stöldbrott","Bilbrott","Skadegörelsebrott","Vissa trafikbrott","Alkohol- och narkotikabrott","Vapenbrott"];
 	var month = ["januari /100000","februari /100000","mars /100000","april /100000","maj /100000","juni /100000","juli /100000","augusti /100000","september /100000","oktober /100000","november /100000", "december /100000"];
 

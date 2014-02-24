@@ -217,7 +217,7 @@ function ParallelCoords()
                     for (var j = 0; j < 10; j++) 
                     {        
                         crimeType['kommun'] = csv[i+j]['kommun'];        
-                        crimeType[csv[i+j]['typ']] = csv[i+j][category];
+                        crimeType[csv[i+j]['typ']] = csv[i+j][category + " /100000"];
                     }
                     newData[(i/10)] = crimeType;
                 }

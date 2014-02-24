@@ -23,6 +23,8 @@ function Map(){
     var height = mapDiv.height() - margin.top - margin.bottom + 40;
     var infoText;
 
+    var legendDomain = [];
+
     var zoom = d3.behavior.zoom()
         .scaleExtent([1, 12])
         .on("zoom", move);
@@ -30,6 +32,7 @@ function Map(){
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
+        .style("margin-top", "-30px")
         .call(zoom);
 
     var projection = d3.geo.mercator()
@@ -73,6 +76,17 @@ function Map(){
 	});
 
 
+    $(document).ready(function(){
+        $(".crimeCategory").click(function(e){
+
+            var category = $(this).text();
+            $("#chooseCategory").text(category); 
+            //console.log(category);
+
+        });
+    });
+
+
 
     // Draw map
     function draw(geoData) {
@@ -111,28 +125,41 @@ function Map(){
 
     function drawLegend() {
 
-        var ext_color_domain = [0, 50, 150, 350, 750, 1500, 2500, 4000];
-        var legend_labels = ["< 50", "50+", "150+", "350+", "750+", "> 1500", "2500", "3000"]; 
         var ls_w = 15, ls_h = 15;
+
+        // Create legend labels
+        var legend_labels = [];
+        var legend_values = [];
+        for (var i = 0; i < legendDomain.length; i++) {
+
+            var label = "";
+
+            label = parseInt(legendDomain[i]) + " - " + parseInt(legendDomain[i+1]);
+
+            legend_labels.push(label);
+
+            if (i != legendDomain.length-1)
+                legend_values.push(legendDomain[i]);
+        }
         
         var legend = svg.selectAll("g.legend")
-          .data(ext_color_domain)
+          .data(legend_values)
           .enter().append("g")
           .attr("class", "legend");
 
         infoText = legend.append("text")
-            .attr("x", 270)
+            .attr("x", 250)
             .attr("y", height - 160)
             .attr("class", "infoText")
             .text("Kommun");
 
         legend.append("text")
-            .attr("x", 270)
+            .attr("x", 250)
             .attr("y", height - 145)
             .text("Totalt antal brott");
 
         legend.append("rect")
-            .attr("x", 270)
+            .attr("x", 250)
             .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h;})
             .attr("width", ls_w)
             .attr("height", ls_h)
@@ -140,7 +167,7 @@ function Map(){
             .style("opacity", 1.0);
 
         legend.append("text")
-            .attr("x", 300)
+            .attr("x", 280)
             .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
             .text(function(d, i){ return legend_labels[i]; });
 
@@ -160,13 +187,21 @@ function Map(){
 
     function quantize(d) {
         
-        var lowLevel = boundaries['Totalt antal brott'][0];
-        var highLevel = boundaries['Totalt antal brott'][1];
+        var lowLevel = boundaries['Stöldbrott'][0];
+        var highLevel = boundaries['Stöldbrott'][1];
 
         levelWidth = (highLevel - lowLevel)/colors.length;
 
+        if(legendDomain.length == 0) {
+            var value = lowLevel;
+            while (value <= highLevel) {
+                legendDomain.push(value);
+                value += levelWidth;
+            }
+        }
+
         var counter = 0;
-        var value = crimeData[d.properties.name]['Totalt antal brott']['helår /100000'];
+        var value = crimeData[d.properties.name]['Stöldbrott']['helår /100000'];
 
         while(lowLevel + (counter * levelWidth) < value && counter < colors.length - 1)
             ++counter;
@@ -174,9 +209,5 @@ function Map(){
         return counter;
 
 	}
-
-
-
-
 
 }
