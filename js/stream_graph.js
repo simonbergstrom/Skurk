@@ -32,7 +32,7 @@ function StreamGraph(){
 	    m = 12; // Antal månader....
 
 	    //console.log(json["Borås"]["Våldsbrott"]);
-	    console.log(json["Hela landet"]);
+	    //console.log(json["Hela landet"]);
 
 	    var crimeDataJsonStream = layering(json);
 	    /*
