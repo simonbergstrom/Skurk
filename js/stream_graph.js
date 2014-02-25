@@ -4,7 +4,16 @@ function StreamGraph(){
 
 	var x,y;
 
-	var padding = -30; // pad the plot on the Y-Axis... 
+	var kommun = "Gotland";
+	var kategori = ["Våldsbrott","Hot- kränknings- och frihetsbrott","Vårdslöshet- och vållandebrott","Stöldbrott","Bilbrott","Skadegörelsebrott","Vissa trafikbrott","Alkohol- och narkotikabrott","Vapenbrott"];
+	var month = ["januari /100000","februari /100000","mars /100000","april /100000","maj /100000","juni /100000","juli /100000","augusti /100000","september /100000","oktober /100000","november /100000", "december /100000"];
+
+	var colors = [ "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd"];
+	var stroke_colors = [ "#560000", "#750000", "#7E2F00", "#7F610C", "#808040", "#677619", "#2C5E25", "#004326", "#00093E"];
+
+	var layers1,stack;
+
+	var padding = 20; // pad the plot on the Y-Axis... 
 
     var streamGraphDiv = $("#streamGraph");
 
@@ -12,14 +21,15 @@ function StreamGraph(){
         width = streamGraphDiv.width() - margin.right - margin.left,
         height = streamGraphDiv.height() - margin.top - margin.bottom;
    
-	var n = 9, // number of layers
+
+   //TESTDATA
+	/*var n = 9, // number of layers
     m = 12; // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
-    layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
-    //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+    layers0 = stack(d3.range(n).map(function(d) { return bumpLayer(m); }));
+    //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));*/
+
   
-
-
     /********* Ladda in data **********/
 	d3.json("data/crime_monthly_municipatalities_2013.json", function(json) {
 
@@ -27,36 +37,12 @@ function StreamGraph(){
 
 	    var crimeDataJson = [];
 
-	    n = 9; // Antal brottskategorier 
-	    m = 12; // Antal månader....
-
-	    //console.log(json["Borås"]["Våldsbrott"]);
-	    //console.log(json["Hela landet"]);
-
 	    var crimeDataJsonStream = layering(json);
-	    /*
-	    n = crimeDataJson[0];
-	    n = Object.keys(n).length -1; // Antal brottskategorier.. tar bort kolumn för kommun 
-	    m = crimeDataJson.length;     // Antal sampel....
 
-	    stack = d3.layout.stack().offset("wiggle"),
-    	layers0 = stack(d3.range(n).map(function() { return layering(crimeDataJson); })); */
+	    stack = d3.layout.stack().offset("wiggle");
+	    //stack = d3.layout.stack().offset("sillhouette");
 
-	    //X-axel
-		/*x = d3.scale.linear()
-		    .domain([0, m - 1])
-		    .range([0, width]);    
-
-		//Y-axel
-		y = d3.scale.linear()
-		    .domain([0, d3.max(layers0/*.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
-		    .range([height, 0]);*/
-
-	   	/* x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-	            return d != "kommun" && (y[d] = d3.scale.linear()
-	            .domain(d3.extent(self.data, function(p) { return +p[d]; }))
-	            .range([height, 0])); 
-	    }));*/
+    	layers1 = stack(crimeDataJsonStream);
 
 	    draw();
 	});
@@ -78,11 +64,11 @@ function StreamGraph(){
 
 		//Y-axel
 		var y = d3.scale.linear()
-		    .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+		    .domain([0, d3.max(layers1, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
 		    .range([height, 0]);
 
 		// Färg på plotten
-		var color = d3.scale.category20b();
+		var color = d3.scale.category20b(); // Används ej
 
 		// Create the axis..
 		var xAxis = d3.svg.axis()
@@ -117,7 +103,7 @@ function StreamGraph(){
 	        .append("text")
 	        .attr("class", "label")
 	        .attr("x", width)
-	        .attr("y", -6).text("Month").attr("transform","translate(-15,0)");
+	        .attr("y", -6).text("Månad").attr("transform","translate(-15,0)");
 	        
 	    // Add y axis and title.
 	    svg.append("g")
@@ -127,46 +113,74 @@ function StreamGraph(){
 	        .attr("class", "label")
 	        .attr("transform", "rotate(-90)")
 	        .attr("y", 6)
-	        .attr("dy", ".71em").text("Categories of crime").attr("transform","translate(-25,190)rotate(-90)");    
+	        .attr("dy", ".71em").text("Brottskategorier").attr("transform","translate(-25,190)rotate(-90)");    
 	 
-		svg.selectAll("path")
-		    .data(layers0)
-		  	
+		svg.selectAll(".area")
+		    .data(layers1)		  	
 		  	.enter().append("path")
 		    .attr("d", area)
 		    .attr("transform", "translate(0," + padding + ")")
-		    .style("fill", function() { return color(Math.random()); })
+		    .style("fill", function(p, i) { return colors[i]; })
+		    .style("stroke", function(p, i) { return stroke_colors[i]; })
+		    .style("stroke-opacity", 0.0 )
+		    .style("stroke-width", 2.0 )
+
 		/****** Tool tip *********/
 
 	        .on("mousemove", function(d, i) {
-	        //... 
-	        d3.select(this).transition().duration(100)
-    				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });	
+
+		        //d3.select(this).transition().duration(100)
+	    		//	.style({ 'fill-opacity':1,'stroke-opacity':1.0,'stroke': '#00000', 'stroke-width': 1});	
+
+	    		d3.select("#streamGraph").selectAll("path")
+    				.transition().duration(100)
+    				.style("fill-opacity", 0.4)
+    				.style("stroke-opacity", function(d,i) {
+    					if(i > 1) 
+    						return 0.0;
+    				});
+
+    			d3.select(this)
+    				.transition().duration(100)
+    				.style("fill-opacity", 1.0)
+    				.style("stroke-opacity", 1.0);
 
 
-	    	tooltip.transition()
-	       .duration(200)
-	       .style("opacity", .9);
-	    	tooltip.html("Layer " + i)
-	       .style("left", (d3.event.pageX + 5) + "px")
-	       .style("top", (d3.event.pageY - 28) + "px");    
+		    	tooltip.transition()
+			        .duration(200)
+			        .style("opacity", .9);
+			    	tooltip.html(kategori[i])
+			        .style("left", (d3.event.pageX + 5) + "px")
+			        .style("top", (d3.event.pageY - 28) + "px");
+
 		    })
 		    .on("mouseout", function(d) {
-		        //... 
 
-		        d3.select(this).transition().duration(100)
-    				.style({ 'fill-opacity':1.0,'stroke-opacity':0.0 });
+		        //d3.select(this).transition().duration(100)
+    			//	.style({ 'fill-opacity':1.0,'stroke-opacity':0.0});
+
+    			d3.select("#streamGraph").selectAll("path")
+    				.transition().duration(100)
+    				.style("fill-opacity", 1.0)
+    				.style("stroke-opacity", function(d,i) {
+    					if(i > 1) 
+    						return 0.0;
+    				});
 
 		        tooltip.transition()
-		       .duration(500)
-		       .style("opacity", 0);  
+			       .duration(500)
+			       .style("opacity", 0);  
+
 		    })
 		    .on("click",  function(d) {
-	            //... 
-	            //selFeature(d);   
+
+	            //var dt = this;
+	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
+	            //selFeature(d);  
+
 	        });
 	}
-
+	// OM VI VILL LADDA OM DATA KAN DETTA VARA BRA?!?!?!?
 	//function transition() {
 	  //d3.selectAll("path")
 	    //  .data(function() {
@@ -197,29 +211,28 @@ function StreamGraph(){
 	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
 
-	// Formatera datan så varje objekt innehåller ett y,y0,x värde....
+	// Formatera datan så varje objekt innehåller ett x,y värde....
 	function layering(z)
 	{
-		var result  = new Array(); 
+		var result  = new Array();
+
 		
 		//x = position i x-led, y0= basposition i y-led.(baslinje), y = tjockhet på linjen
 		var dataPoint = {};
 
-		var crimeAmount = " /100000";
-		var kommun = "Hela landet";
-
+		//var crimeAmount = " /100000";
+		
 		// Loopa antal kategorier = 9
-		/*for(var i = 0; i < z.length; i++)
+		for(var i = 0; i < kategori.length; i++)
 		{
-			var categories = new Array();
+			var tmp = [];
 			// Antal månader = 12
-			for(var j )
+			for(var j=0; j< month.length; j++ )
 			{
-
-
+				tmp.push({"x" : j, "y" : +z[kommun][kategori[i]][month[j]]});
 			}	
-
-		}	*/
+			result.push(tmp);
+		}
 
 		return result; 
 	}

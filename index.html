@@ -47,7 +47,7 @@
 
 				<h1 id="introHeader">Skurk</h1>
 
-				<h6 id="introText">The worlds leading crime visualization in Sweden.</h6>
+				<h6 id="introText">Brottsvisualisering för 2013.</h6>
 
 				<button type="button" id="startButton" class="btn btn-default btn-lg">
 					Start <span class="glyphicon glyphicon-circle-arrow-right"></span>
@@ -89,26 +89,25 @@
 								<div id="viewBottomLeft" class="col-md-12">
 
 									<div id="parallelCoords">
-										<h4 style = "display: inline-block;"> Parallel Coordinates</h4>
-										<div class="btn-group" style = "margin: 5px; display: inline-block; float: right;">
-										<p style="float:left;margin-right:5px;"> Välj tidsspann: </p>
+										<div class="btn-group" style = "margin: 5px; display: inline-block; float: left;">
+										<p style="float:left;margin-right:5px;"> Månad: </p>
 										  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-										   <p id = "chooseData" style="float:left;margin:0;margin-left4px;margin-right:4px;"> helår /100000</p> <span class="caret"></span>
+										   <p id = "chooseData" style="float:left;margin:0;margin-left4px;margin-right:4px;"> helår</p> <span class="caret"></span>
 										  </button>
 										  <ul class="dropdown-menu" role="menu">
-										  	<li><a class = "category">helår /100000</a></li>
-										    <li><a class = "category">januari /100000</a></li>
-										    <li><a class = "category">februari /100000</a></li>
-										    <li><a class = "category">mars /100000</a></li>
-										    <li><a class = "category">april /100000</a></li>
-										    <li><a class = "category">maj /100000</a></li>
-										    <li><a class = "category">juni /100000</a></li>
-										    <li><a class = "category">juli /100000</a></li>
-										    <li><a class = "category">augusti /100000</a></li>
-										    <li><a class = "category">september /100000</a></li>
-										    <li><a class = "category">oktober /100000</a></li>
-										    <li><a class = "category">november /100000</a></li>
-										    <li><a class = "category">december /100000</a></li>								    
+										  	<li><a class = "category">helår</a></li>
+										    <li><a class = "category">januari</a></li>
+										    <li><a class = "category">februari</a></li>
+										    <li><a class = "category">mars</a></li>
+										    <li><a class = "category">april</a></li>
+										    <li><a class = "category">maj</a></li>
+										    <li><a class = "category">juni</a></li>
+										    <li><a class = "category">juli</a></li>
+										    <li><a class = "category">augusti</a></li>
+										    <li><a class = "category">september</a></li>
+										    <li><a class = "category">oktober</a></li>
+										    <li><a class = "category">november</a></li>
+										    <li><a class = "category">december</a></li>								    
 										  </ul>									
 										</div>
 									</div>
@@ -121,7 +120,26 @@
 
 						<div id="viewRight" class="col-md-5">
 
-							<div id="map"></div>
+							<div id="map">
+								<div class="btn-group" style = "margin: 5px; display: inline-block; float: left;">
+								<p style="float:left;margin-right:5px;"> Brottskategori: </p>
+								  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+								   <p id = "chooseCategory" style="float:left;margin:0;margin-left4px;margin-right:4px;"> Totalt antal brott</p> <span class="caret"></span>
+								  </button>
+								  <ul class="dropdown-menu" role="menu">
+								  	<li><a class = "crimeCategory">Totalt antal brott</a></li>
+								    <li><a class = "crimeCategory">Våldsbrott</a></li>
+								    <li><a class = "crimeCategory">Hot- kränknings- och frihetsbrott</a></li>
+								    <li><a class = "crimeCategory">Vårdslöshet- och vållandebrott</a></li>
+								    <li><a class = "crimeCategory">Stöldbrott</a></li>
+								    <li><a class = "crimeCategory">Bilbrott</a></li>
+								    <li><a class = "crimeCategory">Skadegörelsebrott</a></li>
+								    <li><a class = "crimeCategory">Vissa trafikbrott</a></li>
+								    <li><a class = "crimeCategory">Alkohol- och narkotikabrott</a></li>
+								    <li><a class = "crimeCategory">Vapenbrott</a></li>							    
+								  </ul>									
+								</div>
+							</div>
 
 						</div>
 
