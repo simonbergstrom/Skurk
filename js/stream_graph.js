@@ -2,9 +2,26 @@ function StreamGraph(){
 
 	var self = this; // for internal d3 functions
 
+	var municipalities = new Array();
+
+
+	d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+
+	    for (var i = 0; i < csv.length; i+=10) 
+	    {    
+	        var crimeType = {};
+	        for (var j = 0; j < 10; j++) 
+	        {        
+	            var kommun = csv[i+j]['kommun'];        
+	        }
+	        municipalities.push(kommun);
+	    
+	    }
+	});	
+
 	var x,y;
 
-	var kommun = "Gotland";
+	var kommunToStack = "Gotland";
 	var kategori = ["Våldsbrott","Hot- kränknings- och frihetsbrott","Vårdslöshet- och vållandebrott","Stöldbrott","Bilbrott","Skadegörelsebrott","Vissa trafikbrott","Alkohol- och narkotikabrott","Vapenbrott"];
 	var month = ["januari /100000","februari /100000","mars /100000","april /100000","maj /100000","juni /100000","juli /100000","augusti /100000","september /100000","oktober /100000","november /100000", "december /100000"];
 
@@ -13,13 +30,20 @@ function StreamGraph(){
 
 	var layers1,stack;
 
-	var padding = 20; // pad the plot on the Y-Axis... 
+	var padding = 680; // pad the plot on the Y-Axis... 
 
     var streamGraphDiv = $("#streamGraph");
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = streamGraphDiv.width() - margin.right - margin.left,
         height = streamGraphDiv.height() - margin.top - margin.bottom;
+
+
+	var svg = d3.select("#streamGraph").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height+ margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + (-10) + ")");    
    
 
    //TESTDATA
@@ -37,7 +61,7 @@ function StreamGraph(){
 
 	    var crimeDataJson = [];
 
-	    var crimeDataJsonStream = layering(json);
+	    var crimeDataJsonStream = layering(json,kommunToStack);
 
 	    stack = d3.layout.stack().offset("wiggle");
 	    //stack = d3.layout.stack().offset("sillhouette");
@@ -51,6 +75,11 @@ function StreamGraph(){
 
 	function draw()
 	{
+		svg.selectAll("area").remove();
+        svg.selectAll(".axis").remove();
+        svg.selectAll("path").remove();
+
+
     /********* Tooltip ***********/
 	    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
@@ -79,7 +108,6 @@ function StreamGraph(){
 	    var yAxis = d3.svg.axis()
 	    .scale(y)
 	    .orient("left");
-
 	    //Ta bort skala på Y-axel...
 	    yAxis.tickFormat("");
 
@@ -89,14 +117,6 @@ function StreamGraph(){
 		    .y0(function(d) { return y(d.y0); })
 		    .y1(function(d) { return y(d.y0 + d.y); });
 
-
-
-   
-		var svg = d3.select("#streamGraph").append("svg")
-		    .attr("width", width + margin.left + margin.right)
-		    .attr("height", height+ margin.top + margin.bottom)
-		    .append("g")
-	        .attr("transform", "translate(" + margin.left + "," + (-10) + ")");
 
 	    // Add x axis and title.
 	    svg.append("g")
@@ -122,7 +142,7 @@ function StreamGraph(){
 		    .data(layers1)		  	
 		  	.enter().append("path")
 		    .attr("d", area)
-		    .attr("transform", "translate(0," + padding + ")")
+		    .attr("transform", "translate(0,-40)")
 		    .style("fill", function(p, i) { return colors[i]; })
 		    .style("stroke", function(p, i) { return stroke_colors[i]; })
 		    .style("stroke-opacity", 0.0 )
@@ -184,17 +204,17 @@ function StreamGraph(){
 	        });
 	}
 	// OM VI VILL LADDA OM DATA KAN DETTA VARA BRA?!?!?!?
-	//function transition() {
-	  //d3.selectAll("path")
-	    //  .data(function() {
-	      //  var d = layers1;
-	        //layers1 = layers0;
-	       // return layers0 = d;
-	     // })
-	   // .transition()
-	    //  .duration(2500)
-	    //  .attr("d", area); 
-	//}
+	/*function transition(layer2) {
+	  d3.selectAll("path")
+	      .data(function() {
+	        var d = layer2;
+	        layer2 = layers1;
+	        return layers1 = d;
+	      })
+	    .transition()
+	      .duration(2500)
+	      .attr("d", area); 
+	}*/
 
 	// Inspired by Lee Byron's test data generator.
 	function bumpLayer(n) {
@@ -214,8 +234,8 @@ function StreamGraph(){
 	  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
 	}
 
-	// Formatera datan så varje objekt innehåller ett x,y värde....
-	function layering(z)
+	// Formatera datan så varje objekt innehåller ett x,y värde.... z=dataset , t=vilken kommun
+	function layering(z,t)
 	{
 		var result  = new Array();
 
@@ -232,12 +252,65 @@ function StreamGraph(){
 			// Antal månader = 12
 			for(var j=0; j< month.length; j++ )
 			{
-				tmp.push({"x" : j, "y" : +z[kommun][kategori[i]][month[j]]});
+				tmp.push({"x" : j, "y" : +z[t][kategori[i]][month[j]]});
 			}	
 			result.push(tmp);
 		}
 
 		return result; 
 	}
+
+
+	    //Load new data
+    $(document).ready(function(){
+
+        $("#searchBox").on('input', function(){
+   			var inputText = $(this).val();
+
+   			//Hitta kommuner..
+   			$("#searchResults").html("");
+   			
+   			for(var i = 0; i < municipalities.length; i++)
+   			{
+
+   				var re = new RegExp(inputText, 'gi')
+   				var test = municipalities[i].match(re);
+   			
+				if(test != null)
+   				{
+   					$("#searchResults").append("<a style='padding:0px;margin:0px;cursor:pointer;' class='kommun'>" + municipalities[i] + "</a><br />"); 
+   				}	
+   			}
+
+
+
+   			//$("#searchResults").html("<a href='#'>" + inputText + "</a>");
+   			$("#searchResults").fadeIn(300);
+
+   			if(inputText == "")
+   				$("#searchResults").fadeOut(300);
+
+
+   			$(".kommun").click(function(){
+	        	var text = $(this).text();
+	        	$("#searchBox").val(text);
+	        	$("#searchResults").fadeOut(300);
+			});
+        });
+
+        $("#searchbtn").click( function() {
+
+        	var searchtxt = $("#searchBox").val();	
+
+        	crimeDataJsonStream = layering(self.data,searchtxt);
+        	layers1 = stack(crimeDataJsonStream);
+
+        	draw();
+
+        
+    	});
+
+    
+ 	});       
 
 }

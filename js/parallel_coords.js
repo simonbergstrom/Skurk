@@ -186,8 +186,8 @@ function ParallelCoords()
 
     // Returns the path for a given data point.
     function path(d) {
-  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
-}
+      return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+    }
 
     // Handles a brush event, toggling the display of foreground lines.
     function brush() {
