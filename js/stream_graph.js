@@ -20,10 +20,10 @@ function StreamGraph(){
    
 
    //TESTDATA
-	/*var n = 9, // number of layers
+	var n = 14, // number of layers
     m = 12; // number of samples per layer
     stack = d3.layout.stack().offset("wiggle"),
-    layers0 = stack(d3.range(n).map(function(d) { return bumpLayer(m); }));
+    layers1 = stack(d3.range(n).map(function(d) { return bumpLayer(m); }));
     //layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));*/
 
   
@@ -36,8 +36,8 @@ function StreamGraph(){
 
 	    var crimeDataJsonStream = layering(json);
 
-	    stack = d3.layout.stack().offset("wiggle");
-    	layers1 = stack(crimeDataJsonStream);
+	    //stack = d3.layout.stack().offset("wiggle");
+    	//layers1 = stack(crimeDataJsonStream);
 
 	    draw();
 	});
@@ -82,6 +82,8 @@ function StreamGraph(){
 		    .x(function(d) { return x(d.x); })
 		    .y0(function(d) { return y(d.y0); })
 		    .y1(function(d) { return y(d.y0 + d.y); });
+
+
 
    
 		var svg = d3.select("#streamGraph").append("svg")
