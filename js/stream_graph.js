@@ -4,9 +4,12 @@ function StreamGraph(){
 
 	var x,y;
 
-	var kommun = "Hela landet";
+	var kommun = "Gotland";
 	var kategori = ["Våldsbrott","Hot- kränknings- och frihetsbrott","Vårdslöshet- och vållandebrott","Stöldbrott","Bilbrott","Skadegörelsebrott","Vissa trafikbrott","Alkohol- och narkotikabrott","Vapenbrott"];
 	var month = ["januari /100000","februari /100000","mars /100000","april /100000","maj /100000","juni /100000","juli /100000","augusti /100000","september /100000","oktober /100000","november /100000", "december /100000"];
+
+	var colors = [ "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd"];
+	var stroke_colors = [ "#560000", "#750000", "#7E2F00", "#7F610C", "#808040", "#677619", "#2C5E25", "#004326", "#00093E"];
 
 	var layers1,stack;
 
@@ -36,8 +39,11 @@ function StreamGraph(){
 
 	    var crimeDataJsonStream = layering(json);
 
-	    //stack = d3.layout.stack().offset("wiggle");
-    	//layers1 = stack(crimeDataJsonStream);
+	    stack = d3.layout.stack().offset("wiggle");
+	    //stack = d3.layout.stack().offset("sillhouette");
+
+    	layers1 = stack(crimeDataJsonStream);
+
 
 	    draw();
 	});
@@ -63,7 +69,7 @@ function StreamGraph(){
 		    .range([height, 0]);
 
 		// Färg på plotten
-		var color = d3.scale.category20b();
+		var color = d3.scale.category20b(); // Används ej
 
 		// Create the axis..
 		var xAxis = d3.svg.axis()
@@ -100,7 +106,7 @@ function StreamGraph(){
 	        .append("text")
 	        .attr("class", "label")
 	        .attr("x", width)
-	        .attr("y", -6).text("Month").attr("transform","translate(-15,0)");
+	        .attr("y", -6).text("Månad").attr("transform","translate(-15,0)");
 	        
 	    // Add y axis and title.
 	    svg.append("g")
@@ -110,45 +116,71 @@ function StreamGraph(){
 	        .attr("class", "label")
 	        .attr("transform", "rotate(-90)")
 	        .attr("y", 6)
-	        .attr("dy", ".71em").text("Categories of crime").attr("transform","translate(-25,190)rotate(-90)");    
+	        .attr("dy", ".71em").text("Brottskategorier").attr("transform","translate(-25,190)rotate(-90)");    
 	 
-		svg.selectAll("path")
-		    .data(layers1)
-		  	
+		svg.selectAll(".area")
+		    .data(layers1)		  	
 		  	.enter().append("path")
 		    .attr("d", area)
 		    .attr("transform", "translate(0," + padding + ")")
-		    .style("fill", function() { return color(Math.random()); })
+		    .style("fill", function(p, i) { return colors[i]; })
+		    .style("stroke", function(p, i) { return stroke_colors[i]; })
+		    .style("stroke-opacity", 0.0 )
+		    .style("stroke-width", 2.0 )
+
 		/****** Tool tip *********/
 
 	        .on("mousemove", function(d, i) {
-	        //... 
-	        d3.select(this).transition().duration(100)
-    				.style({ 'fill-opacity':1,'stroke-opacity':1.0,'stroke': '#00000', 'stroke-width': 3});	
+
+		        //d3.select(this).transition().duration(100)
+	    		//	.style({ 'fill-opacity':1,'stroke-opacity':1.0,'stroke': '#00000', 'stroke-width': 1});	
+
+	    		d3.select("#streamGraph").selectAll("path")
+    				.transition().duration(100)
+    				.style("fill-opacity", 0.4)
+    				.style("stroke-opacity", function(d,i) {
+    					if(i > 1) 
+    						return 0.0;
+    				});
+
+    			d3.select(this)
+    				.transition().duration(100)
+    				.style("fill-opacity", 1.0)
+    				.style("stroke-opacity", 1.0);
 
 
-	    	tooltip.transition()
-	       .duration(200)
-	       .style("opacity", .9);
-	    	tooltip.html(kategori[i])
-	       .style("left", (d3.event.pageX + 5) + "px")
-	       .style("top", (d3.event.pageY - 28) + "px");    
+		    	tooltip.transition()
+			        .duration(200)
+			        .style("opacity", .9);
+			    	tooltip.html(kategori[i])
+			        .style("left", (d3.event.pageX + 5) + "px")
+			        .style("top", (d3.event.pageY - 28) + "px");
+
 		    })
 		    .on("mouseout", function(d) {
-		        //... 
 
-		        d3.select(this).transition().duration(100)
-    				.style({ 'fill-opacity':1.0,'stroke-opacity':0.0});
+		        //d3.select(this).transition().duration(100)
+    			//	.style({ 'fill-opacity':1.0,'stroke-opacity':0.0});
+
+    			d3.select("#streamGraph").selectAll("path")
+    				.transition().duration(100)
+    				.style("fill-opacity", 1.0)
+    				.style("stroke-opacity", function(d,i) {
+    					if(i > 1) 
+    						return 0.0;
+    				});
 
 		        tooltip.transition()
 			       .duration(500)
 			       .style("opacity", 0);  
+
 		    })
 		    .on("click",  function(d) {
-	            //...
-	            var dt = this;
-	            d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
-	            //selFeature(d);   
+
+	            //var dt = this;
+	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
+	            //selFeature(d);  
+
 	        });
 	}
 	// OM VI VILL LADDA OM DATA KAN DETTA VARA BRA?!?!?!?
@@ -185,7 +217,8 @@ function StreamGraph(){
 	// Formatera datan så varje objekt innehåller ett x,y värde....
 	function layering(z)
 	{
-		var result  = new Array(); 
+		var result  = new Array();
+
 		
 		//x = position i x-led, y0= basposition i y-led.(baslinje), y = tjockhet på linjen
 		var dataPoint = {};
@@ -203,6 +236,7 @@ function StreamGraph(){
 			}	
 			result.push(tmp);
 		}
+
 		return result; 
 	}
 

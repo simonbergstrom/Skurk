@@ -21,6 +21,9 @@ function Map(){
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 	var width = mapDiv.width() - margin.right - margin.left + 39;
     var height = mapDiv.height() - margin.top - margin.bottom + 40;
+    var infoText;
+
+    var legendDomain = [];
 
     var zoom = d3.behavior.zoom()
         .scaleExtent([1, 12])
@@ -29,37 +32,8 @@ function Map(){
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
+        .style("margin-top", "-30px")
         .call(zoom);
-
-    var infoBox = d3.select("#map").insert("div")
- 		.style("position", "absolute") 
-		.style("z-index", "10")
-        .style("border", 3 + "px solid #000000")
-        .style("width", 35 + "%")
-        .style("height", 135 + "px")
-        .style("left", 65.5 + "%")
-        .style("top", 65 + "%")
-        .style("font-size", 20 + 'px')
-        .style("color", '#FFFFFF')
-        .style("background-color", '#555555')
-        .style("padding-left", 3 + 'px');
-	    //.text("Kommun");
-
-    var infoText = infoBox.insert("div")
-        .style("z-index", "20")
-        .text("Kommun");
-
-    infoBox.insert("div")
-        .style("width", 10 + "px")
-        .style("height", 10 + "px")
-        .style("z-index", "20")
-        .style("background-color", "#FF0000")
-
-    infoBox.insert("div")
-        .style("width", 10 + "px")
-        .style("height", 10 + "px")
-        .style("z-index", "20")
-        .style("background-color", "#FF0000")
 
     var projection = d3.geo.mercator()
         .center([31, 64.5 ])
@@ -95,11 +69,22 @@ function Map(){
             });
 
             var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
-            draw(geoData);   
+            draw(geoData); 
 
         });
 
 	});
+
+
+    $(document).ready(function(){
+        $(".crimeCategory").click(function(e){
+
+            var category = $(this).text();
+            $("#chooseCategory").text(category); 
+            //console.log(category);
+
+        });
+    });
 
 
 
@@ -133,7 +118,59 @@ function Map(){
     			infoText.html("Kommun");
 
         });
+
+        drawLegend();
 		
+    }
+
+    function drawLegend() {
+
+        var ls_w = 15, ls_h = 15;
+
+        // Create legend labels
+        var legend_labels = [];
+        var legend_values = [];
+        for (var i = 0; i < legendDomain.length; i++) {
+
+            var label = "";
+
+            label = parseInt(legendDomain[i]) + " - " + parseInt(legendDomain[i+1]);
+
+            legend_labels.push(label);
+
+            if (i != legendDomain.length-1)
+                legend_values.push(legendDomain[i]);
+        }
+        
+        var legend = svg.selectAll("g.legend")
+          .data(legend_values)
+          .enter().append("g")
+          .attr("class", "legend");
+
+        infoText = legend.append("text")
+            .attr("x", 250)
+            .attr("y", height - 160)
+            .attr("class", "infoText")
+            .text("Kommun");
+
+        legend.append("text")
+            .attr("x", 250)
+            .attr("y", height - 145)
+            .text("Totalt antal brott");
+
+        legend.append("rect")
+            .attr("x", 250)
+            .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h;})
+            .attr("width", ls_w)
+            .attr("height", ls_h)
+            .style("fill", function(d, i) { return colors[i]; })
+            .style("opacity", 1.0);
+
+        legend.append("text")
+            .attr("x", 280)
+            .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
+            .text(function(d, i){ return legend_labels[i]; });
+
 
     }
 
@@ -150,23 +187,27 @@ function Map(){
 
     function quantize(d) {
         
-        var lowLevel = boundaries['Totalt antal brott'][0];
-        var highLevel = boundaries['Totalt antal brott'][1];
+        var lowLevel = boundaries['Stöldbrott'][0];
+        var highLevel = boundaries['Stöldbrott'][1];
 
         levelWidth = (highLevel - lowLevel)/colors.length;
 
-        var counter = 0;
-        var value = crimeData[d.properties.name]['Totalt antal brott']['helår /100000'];
+        if(legendDomain.length == 0) {
+            var value = lowLevel;
+            while (value <= highLevel) {
+                legendDomain.push(value);
+                value += levelWidth;
+            }
+        }
 
-        while(lowLevel + (counter * levelWidth) < value && counter < colors.length-1)
+        var counter = 0;
+        var value = crimeData[d.properties.name]['Stöldbrott']['helår /100000'];
+
+        while(lowLevel + (counter * levelWidth) < value && counter < colors.length - 1)
             ++counter;
         
         return counter;
 
 	}
-
-
-
-
 
 }
