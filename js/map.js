@@ -19,8 +19,8 @@ function Map(){
 
 	var mapDiv = $("#map");
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
-	var width = mapDiv.width() - margin.right - margin.left + 39;
-    var height = mapDiv.height() - margin.top - margin.bottom + 40;
+	var width = mapDiv.width() - margin.right - margin.left + 40;
+    var height = mapDiv.height() - margin.top - margin.bottom + 39.5;
     var infoText;
     var geoData;
 
@@ -33,7 +33,7 @@ function Map(){
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("margin-top", "-30px")
+        .style("margin-top", "-39px")
         .call(zoom);
 
     var projection = d3.geo.mercator()
@@ -160,19 +160,22 @@ function Map(){
             .attr("x", 250)
             .attr("y", height - 170)
             .attr("class", "infoText")
+            .style("fill", "#333333")
             .text("Kommun");
 
         legend.append("text")
             .attr("id", "crimeType")
             .attr("x", 250)
-            .attr("y", height - 157);
+            .attr("y", height - 157)
+            .style("fill", "#333333");
 
         $("#crimeType").html($("#chooseCategory").text().trim());
 
         legend.append("text")
             .attr("id", "info")
             .attr("x", 250)
-            .attr("y", height - 145);
+            .attr("y", height - 145)
+            .style("fill", "#333333");
 
         $("#info").html("Per 100 000 inv.");
 
@@ -187,6 +190,7 @@ function Map(){
         legend.append("text")
             .attr("x", 280)
             .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 9;})
+            .style("fill", "#333333")
             .html(function(d, i){ return legend_labels[i]; });
 
 
