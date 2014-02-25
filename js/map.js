@@ -22,6 +22,7 @@ function Map(){
 	var width = mapDiv.width() - margin.right - margin.left + 39;
     var height = mapDiv.height() - margin.top - margin.bottom + 40;
     var infoText;
+    var geoData;
 
     var legendDomain = [];
 
@@ -68,7 +69,7 @@ function Map(){
                 
             });
 
-            var geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
+            geoData = topojson.feature(sweden, sweden.objects.swe_mun).features;
             draw(geoData); 
 
         });
@@ -81,7 +82,11 @@ function Map(){
 
             var category = $(this).text();
             $("#chooseCategory").text(category); 
+
+            $("#crimeType").html(category);
             //console.log(category);
+
+            draw(geoData);
 
         });
     });
@@ -90,6 +95,8 @@ function Map(){
 
     // Draw map
     function draw(geoData) {
+
+        calcLegend();
 
     	var kommuner = g.selectAll(".name").data(geoData);
 
@@ -141,26 +148,37 @@ function Map(){
             if (i != legendDomain.length-1)
                 legend_values.push(legendDomain[i]);
         }
+
+        svg.selectAll("g.legend").remove();
         
         var legend = svg.selectAll("g.legend")
-          .data(legend_values)
-          .enter().append("g")
-          .attr("class", "legend");
+            .data(legend_values)
+            .enter().append("g")
+            .attr("class", "legend");
 
         infoText = legend.append("text")
             .attr("x", 250)
-            .attr("y", height - 160)
+            .attr("y", height - 170)
             .attr("class", "infoText")
             .text("Kommun");
 
         legend.append("text")
+            .attr("id", "crimeType")
             .attr("x", 250)
-            .attr("y", height - 145)
-            .text("Totalt antal brott");
+            .attr("y", height - 157);
+
+        $("#crimeType").html($("#chooseCategory").text().trim());
+
+        legend.append("text")
+            .attr("id", "info")
+            .attr("x", 250)
+            .attr("y", height - 145);
+
+        $("#info").html("Per 100 000 inv.");
 
         legend.append("rect")
             .attr("x", 250)
-            .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h;})
+            .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h - 5;})
             .attr("width", ls_w)
             .attr("height", ls_h)
             .style("fill", function(d, i) { return colors[i]; })
@@ -168,8 +186,8 @@ function Map(){
 
         legend.append("text")
             .attr("x", 280)
-            .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
-            .text(function(d, i){ return legend_labels[i]; });
+            .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 9;})
+            .html(function(d, i){ return legend_labels[i]; });
 
 
     }
@@ -185,23 +203,36 @@ function Map(){
 
     }
 
-    function quantize(d) {
+    function calcLegend() {
+
+        legendDomain = [];
+
+        var category = $("#chooseCategory").text().trim();
         
-        var lowLevel = boundaries['Stöldbrott'][0];
-        var highLevel = boundaries['Stöldbrott'][1];
+        var lowLevel = boundaries[category][0];
+        var highLevel = boundaries[category][1];
 
         levelWidth = (highLevel - lowLevel)/colors.length;
 
-        if(legendDomain.length == 0) {
-            var value = lowLevel;
-            while (value <= highLevel) {
-                legendDomain.push(value);
-                value += levelWidth;
-            }
+        var value = lowLevel;
+        while (value <= highLevel) {
+            legendDomain.push(value);
+            value += levelWidth;
         }
 
+    }
+
+    function quantize(d) {
+
+        var category = $("#chooseCategory").text().trim();
+        
+        var lowLevel = boundaries[category][0];
+        var highLevel = boundaries[category][1];
+
+        levelWidth = (highLevel - lowLevel)/colors.length;
+
         var counter = 0;
-        var value = crimeData[d.properties.name]['Stöldbrott']['helår /100000'];
+        var value = crimeData[d.properties.name][category]['helår /100000'];
 
         while(lowLevel + (counter * levelWidth) < value && counter < colors.length - 1)
             ++counter;
