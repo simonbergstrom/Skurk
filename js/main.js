@@ -1,13 +1,13 @@
 
-$( document ).ready(function() {
+//$( document ).ready(function() {
 
 
 	var streamGraph = new StreamGraph();
 
-	var parallelCoords = new ParallelCoords();
+	var parallelCoords1 = new ParallelCoords();
 
 	var map = new Map();
 
-});
+//});
 
 
