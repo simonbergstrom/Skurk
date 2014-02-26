@@ -197,9 +197,10 @@ function StreamGraph(){
 		    })
 		    .on("click",  function(d) {
 
-	            //var dt = this;
-	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
-	            //selFeature(d);  
+	            var dt = this;
+	            d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
+	            var tempMunicipality = $("#seachBox").val();
+	            markOtherViews(tempMunicipality);  
 
 	        });
 	}
@@ -260,8 +261,13 @@ function StreamGraph(){
 		return result; 
 	}
 
+	//Marks the municipality in other views.
+	function markOtherViews(value)
+	{
+		parallelCoords1.markLine(value);
+	}
 
-	    //Load new data
+	//Load new data
     $(document).ready(function(){
 
         $("#searchBox").on('input', function(){

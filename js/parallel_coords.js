@@ -201,6 +201,8 @@ function ParallelCoords()
         });
     }
 
+    
+
     //Load new data
     $(document).ready(function(){
 
@@ -234,6 +236,13 @@ function ParallelCoords()
             });   
         });
     });
+    
+    //Called by other views
+    this.markLine = function(value){
+        //console.log(value);
+        //d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("opacity", function(d){ return d["kommun"] != value["kommun"] ? null : "0.01" });
+    };
+    
 
 }
 
