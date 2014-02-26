@@ -56,6 +56,7 @@ function ParallelCoords()
         }
 
         self.data = newData;
+        pam(self.data, 4);
 
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             return d != "kommun" && (y[d] = d3.scale.linear()
@@ -200,6 +201,8 @@ function ParallelCoords()
         });
     }
 
+    
+
     //Load new data
     $(document).ready(function(){
 
@@ -233,6 +236,13 @@ function ParallelCoords()
             });   
         });
     });
+    
+    //Called by other views
+    this.markLine = function(value){
+        //console.log(value);
+        //d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("opacity", function(d){ return d["kommun"] != value["kommun"] ? null : "0.01" });
+    };
+    
 
 }
 
