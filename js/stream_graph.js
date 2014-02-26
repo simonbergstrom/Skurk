@@ -66,6 +66,7 @@ function StreamGraph(){
 		svg.selectAll("area").remove();
         svg.selectAll(".axis").remove();
         svg.selectAll("path").remove();
+        d3.selectAll(".remove").remove();
 
 
     /********* Tooltip ***********/
