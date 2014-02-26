@@ -190,10 +190,9 @@ function StreamGraph(){
 		    })
 		    .on("click",  function(d) {
 
-	            var dt = this;
-	            d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
-	            var tempMunicipality = $("#seachBox").val();
-	            markOtherViews(tempMunicipality);  
+	            //var dt = this;
+	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
+	             
 
 	        });
 
@@ -300,7 +299,19 @@ function StreamGraph(){
         	crimeDataJsonStream = layering(self.data,searchtxt);
         	layers1 = stack(crimeDataJsonStream);
 
+	        markOtherViews(searchtxt); 
+
         	draw();
     	});
- 	});       
+
+ 	}); 
+
+ 	this.markMunicipality = function(value)
+ 	{
+ 		crimeDataJsonStream = layering(self.data, value);
+ 		layers1 = stack(crimeDataJsonStream);
+ 		$("#searchBox").val(value);
+ 		draw();
+ 	}      
+
 }

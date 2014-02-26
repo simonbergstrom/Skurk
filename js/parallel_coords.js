@@ -38,6 +38,8 @@ function ParallelCoords()
 
     var dataToGet = "helår /100000";
 
+    var color = d3.scale.category20();
+
 
 
     d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
@@ -83,24 +85,14 @@ function ParallelCoords()
         svg.selectAll("path").remove();
         svg.selectAll(".dimension").remove();
         
-        var color = d3.scale.category20();
+        
 
         // Add grey background lines for context.
             background = svg.append("svg:g")
             .attr("class", "background")
             .selectAll("path")
             .data(self.data)
-            .enter().append("svg:path");
-                
-        // Add colored lines for focus
-            foreground = svg.append("svg:g")
-            .attr("class", "foreground")
-            .selectAll("path")
-            .data(self.data)
             .enter().append("svg:path")
-            .attr("d", path)
-            .style("stroke", function(d) { return color(d['kommun']); })
-            
             .on("mousemove", function(d) {
                 //...
                tooltip.transition()
@@ -118,6 +110,38 @@ function ParallelCoords()
                .duration(500)
                .style("opacity", 0);
                  
+            });
+                
+        // Add colored lines for focus
+            foreground = svg.append("svg:g")
+            .attr("class", "foreground")
+            .selectAll("path")
+            .data(self.data)
+            .enter().append("svg:path")
+            .attr("d", path)
+            .style("stroke", function(d) { return color(d['kommun']); })
+            
+            .on("mousemove", function(d) {
+                
+               resetColors();
+
+               tooltip.transition()
+               .duration(200)
+               .style("opacity", 1);
+                tooltip.html(d['kommun'])
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+
+            })
+            .on("mouseout", function(d) {
+                //...
+                tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+                 
+            })
+            .on("click", function(d){
+                markOtherViews(d['kommun']);
             });   
 
         // Add a group element for each dimension.
@@ -201,6 +225,11 @@ function ParallelCoords()
         });
     }
 
+    function resetColors()
+    {
+        d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke", function(d){ return color(d['kommun']); })
+        .style("stroke-opacity", "0.7").style("stroke-width", "1px");
+    }
     
 
     //Load new data
@@ -239,9 +268,37 @@ function ParallelCoords()
     
     //Called by other views
     this.markLine = function(value){
-        //console.log(value);
-        //d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("opacity", function(d){ return d["kommun"] != value["kommun"] ? null : "0.01" });
+        console.log(value);
+        d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke-width", function(d){ return d["kommun"] != value ? null : "6px" })
+        .style("stroke-opacity", function(d){
+
+            if(d['kommun'] == value)
+            {
+                return "1";
+            }
+            else
+            {
+                return "0.2";
+            } 
+            
+        }).style("stroke", function(d){ 
+            if(d['kommun'] == value)
+            {
+                return "#f00";
+            }
+            else
+            {
+                return "#444";
+            }
+        });
+
+    
     };
+
+    function markOtherViews(value)
+    {
+        streamGraph.markMunicipality(value);
+    }
     
 
 }
