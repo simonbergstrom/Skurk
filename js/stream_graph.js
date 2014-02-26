@@ -21,7 +21,7 @@ function StreamGraph(){
 
 	var x,y;
 
-	var kommunToStack = "Gotland";
+	var kommunToStack = "Hela landet";
 	var kategori = ["Våldsbrott","Hot- kränknings- och frihetsbrott","Vårdslöshet- och vållandebrott","Stöldbrott","Bilbrott","Skadegörelsebrott","Vissa trafikbrott","Alkohol- och narkotikabrott","Vapenbrott"];
 	var month = ["januari /100000","februari /100000","mars /100000","april /100000","maj /100000","juni /100000","juli /100000","augusti /100000","september /100000","oktober /100000","november /100000", "december /100000"];
 
@@ -197,10 +197,9 @@ function StreamGraph(){
 		    })
 		    .on("click",  function(d) {
 
-	            var dt = this;
-	            d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
-	            var tempMunicipality = $("#seachBox").val();
-	            markOtherViews(tempMunicipality);  
+	            //var dt = this;
+	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
+	             
 
 	        });
 	}
@@ -311,12 +310,22 @@ function StreamGraph(){
         	crimeDataJsonStream = layering(self.data,searchtxt);
         	layers1 = stack(crimeDataJsonStream);
 
+	        markOtherViews(searchtxt); 
+
         	draw();
 
         
     	});
 
     
- 	});       
+ 	}); 
+
+ 	this.markMunicipality = function(value)
+ 	{
+ 		crimeDataJsonStream = layering(self.data, value);
+ 		layers1 = stack(crimeDataJsonStream);
+ 		$("#searchBox").val(value);
+ 		draw();
+ 	}      
 
 }
