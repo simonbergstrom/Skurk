@@ -56,6 +56,7 @@ function ParallelCoords()
         }
 
         self.data = newData;
+        pam(self.data, 4);
 
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             return d != "kommun" && (y[d] = d3.scale.linear()
