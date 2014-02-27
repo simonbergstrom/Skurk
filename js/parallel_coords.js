@@ -89,6 +89,7 @@ function ParallelCoords()
         svg.selectAll("path").remove();
         svg.selectAll(".dimension").remove();
         
+        // HÄR MÅLAR VI OM KARTAN FÖR SKOJS SKULLL JOHN HIOOLLELELLEMNENNN MODERAT 2014
         d3.select("#map").selectAll("path").style("fill", function(d,i) {
             return colors[clusters[i]];
 

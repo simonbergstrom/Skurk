@@ -36,6 +36,7 @@ function StreamGraph(){
         width = streamGraphDiv.width() - margin.right - margin.left,
         height = streamGraphDiv.height() - margin.top - margin.bottom;
 
+    var area;
 	var svg = d3.select("#streamGraph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height+ margin.top + margin.bottom)
@@ -99,55 +100,24 @@ function StreamGraph(){
 	    .scale(y)
 	    .orient("left");
 	  
-
 	    var yAxisr = d3.svg.axis()
 	    .scale(y)
-	    .orient("left");
+	    .orient("right");
 
 	      //Ta bort skala på Y-axel...
 	    yAxisr.tickFormat("");
 	    yAxis.tickFormat("");
 
 	    // Definera arean på datan som ska representeras
-		var area = d3.svg.area()
+		area = d3.svg.area()
 			.interpolate("cardinal")
 		    .x(function(d) { return x(d.x); })
 		    .y0(function(d) { return y(d.y0); })
 		    .y1(function(d) { return y(d.y0 + d.y); });
-
-	    // Add x axis and title.
-	    svg.append("g")
-	        .attr("class", "x axis")
-	        .attr("transform", "translate(0," + height + ")")
-	        .call(xAxis)
-	        .append("text")
-	        .attr("class", "label")
-	        .attr("x", width)
-	        .attr("y", -6).text("Månad").attr("transform","translate(-50,0)");
-	        
-	    // Add y axis and title.
-	    svg.append("g")
-	        .attr("class", "y axis")
-	        .call(yAxis)
-	        .append("text")
-	        .attr("class", "label")
-	        .attr("transform", "rotate(-90)")
-	        .attr("y", 6)
-	        .attr("dy", ".71em").text("Brottskategorier").attr("transform","translate(-25,190)rotate(-90)");  
-
-	    // Other y axis
-	    svg.append("g")
-	        .attr("class", "y axis r")
-	        .attr("transform","translate(" + width + ",0)")
-	        .call(yAxisr)
-	        .append("text")
-	        .attr("class", "label")
-	        .attr("transform", "rotate(-90)translate(10,-20)")
-	        .attr("y", 6);
 	 
 
 
-		svg.selectAll(".area")
+		svg.selectAll("path")
 		    .data(layers1)		  	
 		  	.enter().append("path")
 		    .attr("d", area)
@@ -165,7 +135,7 @@ function StreamGraph(){
     				.transition().duration(100)
     				.style("fill-opacity", 0.4)
     				.style("stroke-opacity", function(d,i) {
-    					if(i > 2) 
+    					if(i < 9) 
     						return 0.0;
     				});
 
@@ -199,7 +169,7 @@ function StreamGraph(){
     				.transition().duration(100)
     				.style("fill-opacity", 1.0)
     				.style("stroke-opacity", function(d,i) {
-    					if(i > 2) 
+    					if(i < 9)  
     						return 0.0;
     				});
 
@@ -214,6 +184,42 @@ function StreamGraph(){
 	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
 	        });
 
+
+
+	    // Add x axis and title.
+	    svg.append("g")
+	        .attr("class", "x axis")
+	        .attr("transform", "translate(0," + height + ")")
+	        .call(xAxis)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("x", width)
+	        .attr("y", -6).text("Månad").attr("transform","translate(-50,0)");
+	        
+	    // Add y axis and title.
+	    svg.append("g")
+	        .attr("class", "y axis")
+	        .call(yAxis)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("transform", "rotate(-90)")
+	        .attr("y", 6)
+	        .attr("dy", ".71em").text("Brottskategorier").attr("transform","translate(-25,190)rotate(-90)");  
+
+	    // Other y axis
+	    svg.append("g")
+	        .attr("class", "y axis r")
+	        .attr("transform","translate(" + width + ",0)")
+	        .style("stroke-width", 1.0 )
+	        .call(yAxisr)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("transform", "rotate(-90)translate(10,-20)")
+	        .attr("y", 6);
+
+
+
+
 		/****Vertical axis tool *********/    
 		var vertical = d3.select("#streamGraph")
 		        .append("div")
@@ -227,28 +233,30 @@ function StreamGraph(){
 		        .style("left", "0px")
 		        .style("background", "#fff");
 
-		  d3.select("#streamGraph")
-		      .on("mousemove", function(){  
-		         mousex = d3.mouse(this);
-		         mousex = mousex[0] + 5;
-		         vertical.style("left", mousex + "px" )})
-		      .on("mouseover", function(){  
-		         mousex = d3.mouse(this);
-		         mousex = mousex[0] + 5;
-		         vertical.style("left", mousex + "px")});
+		d3.select("#streamGraph")
+		    .on("mousemove", function(){  
+		        mousex = d3.mouse(this);
+		        mousex = mousex[0] + 5;
+		        vertical.style("left", mousex + "px" )})
+		    .on("mouseover", function(){  
+		        mousex = d3.mouse(this);
+		        mousex = mousex[0] + 5;
+		        vertical.style("left", mousex + "px")});
 	}
 	// Useful for transition? 
-	/*function transition(layer2) {
-	  d3.selectAll("path")
-	      .data(function() {
-	        var d = layer2;
-	        layer2 = layers1;
-	        return layers1 = d;
-	      })
-	    .transition()
-	      .duration(2500)
-	      .attr("d", area); 
-	}*/
+	function transition(layer2) {
+
+		d3.selectAll("path")
+			.data(function() {
+				var d = layer2;
+				layer2 = layers1;
+				return layers1 = d;
+			})
+			.transition()
+			.duration(1000)
+			.attr("d", area);
+
+	}
 
 	// Form the data to fit to the stack operator to create a Stream... z=dataset, t=municipality
 	function layering(z,t)
@@ -319,7 +327,8 @@ function StreamGraph(){
 
 	        markOtherViews(searchtxt); 
 
-        	draw();
+	        transition(layers1);
+        	//draw();
     	});
 
  	}); 
@@ -329,7 +338,9 @@ function StreamGraph(){
  		crimeDataJsonStream = layering(self.data, value);
  		layers1 = stack(crimeDataJsonStream);
  		$("#searchBox").val(value);
- 		draw();
+ 		
+ 		transition(layers1);
+ 		//draw();
  	}      
 
 }

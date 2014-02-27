@@ -8,7 +8,7 @@
 {
     fill: none;
     stroke: #000000;
-    shape-rendering: crispEdges;
+    shape-rendering: geometricPrecision;
 }
 
 #streamGraph #searchResults
