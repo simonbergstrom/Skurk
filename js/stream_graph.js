@@ -123,7 +123,7 @@ function StreamGraph(){
 	        .append("text")
 	        .attr("class", "label")
 	        .attr("x", width)
-	        .attr("y", -6).text("Månad").attr("transform","translate(-15,0)");
+	        .attr("y", -6).text("Månad").attr("transform","translate(-50,0)");
 	        
 	    // Add y axis and title.
 	    svg.append("g")
