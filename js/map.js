@@ -1,20 +1,23 @@
+
+// Global variables
+var boundaries = {
+    "Totalt antal brott" : [100000,0],
+    "Våldsbrott" : [100000,0],
+    "Hot- kränknings- och frihetsbrott" : [100000,0],
+    "Vårdslöshet- och vållandebrott" : [100000,0],
+    "Stöldbrott" : [100000,0],
+    "Bilbrott" : [100000,0],
+    "Skadegörelsebrott" : [100000,0],
+    "Vissa trafikbrott" : [100000,0],
+    "Alkohol- och narkotikabrott" : [100000,0],
+    "Vapenbrott" : [100000,0],
+};
+
 function Map(){
 
 	// Initalization
 
 	var crimeData;
-    var boundaries = {
-        "Totalt antal brott" : [100000,0],
-        "Våldsbrott" : [100000,0],
-        "Hot- kränknings- och frihetsbrott" : [100000,0],
-        "Vårdslöshet- och vållandebrott" : [100000,0],
-        "Stöldbrott" : [100000,0],
-        "Bilbrott" : [100000,0],
-        "Skadegörelsebrott" : [100000,0],
-        "Vissa trafikbrott" : [100000,0],
-        "Alkohol- och narkotikabrott" : [100000,0],
-        "Vapenbrott" : [100000,0],
-    };
     var colors = ["#ffeda0", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#bd0026", "#800026"];
 
 	var mapDiv = $("#map");
