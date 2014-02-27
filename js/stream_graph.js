@@ -98,7 +98,14 @@ function StreamGraph(){
 	    var yAxis = d3.svg.axis()
 	    .scale(y)
 	    .orient("left");
-	    //Ta bort skala på Y-axel...
+	  
+
+	    var yAxisr = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+
+	      //Ta bort skala på Y-axel...
+	    yAxisr.tickFormat("");
 	    yAxis.tickFormat("");
 
 	    // Definera arean på datan som ska representeras
@@ -128,6 +135,18 @@ function StreamGraph(){
 	        .attr("y", 6)
 	        .attr("dy", ".71em").text("Brottskategorier").attr("transform","translate(-25,190)rotate(-90)");  
 
+	    // Other y axis
+	    svg.append("g")
+	        .attr("class", "y axis r")
+	        .attr("transform","translate(" + width + ",0)")
+	        .call(yAxisr)
+	        .append("text")
+	        .attr("class", "label")
+	        .attr("transform", "rotate(-90)translate(10,-20)")
+	        .attr("y", 6);
+	 
+
+
 		svg.selectAll(".area")
 		    .data(layers1)		  	
 		  	.enter().append("path")
@@ -146,7 +165,7 @@ function StreamGraph(){
     				.transition().duration(100)
     				.style("fill-opacity", 0.4)
     				.style("stroke-opacity", function(d,i) {
-    					if(i > 1) 
+    					if(i > 2) 
     						return 0.0;
     				});
 
@@ -180,7 +199,7 @@ function StreamGraph(){
     				.transition().duration(100)
     				.style("fill-opacity", 1.0)
     				.style("stroke-opacity", function(d,i) {
-    					if(i > 1) 
+    					if(i > 2) 
     						return 0.0;
     				});
 
@@ -193,8 +212,6 @@ function StreamGraph(){
 
 	            //var dt = this;
 	            //d3.select("#streamGraph").selectAll("path").style("opacity",function(z){ return this == dt ? null: 0.6;} );
-	             
-
 	        });
 
 		/****Vertical axis tool *********/    
