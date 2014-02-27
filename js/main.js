@@ -3,9 +3,16 @@
 
 	var map = new Map();
 
-	var streamGraph = new StreamGraph();
+	var streamGraph;
+	var parallelCoords1
 
-	var parallelCoords1 = new ParallelCoords();
+	setTimeout(function(){
+
+		streamGraph = new StreamGraph();
+
+		parallelCoords1 = new ParallelCoords();
+
+	}, 500);
 
 //});
 

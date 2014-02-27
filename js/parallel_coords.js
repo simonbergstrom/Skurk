@@ -1,6 +1,9 @@
 function ParallelCoords()
 {
 
+    var colors = ['rgb(228,26,28)','rgb(55,126,184)','rgb(77,175,74)','rgb(152,78,163)','rgb(255,127,0)','rgb(255,255,51)','rgb(166,86,40)','rgb(247,129,191)'];
+    var clusters;
+
 	//Some initial stuff needed for parallel Coordinates.
 
 	var self = this; // for internal d3 functions
@@ -58,7 +61,7 @@ function ParallelCoords()
         }
 
         self.data = newData;
-        pam(self.data, 4);
+        clusters = pam(self.data, 2);
 
 
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
@@ -86,7 +89,10 @@ function ParallelCoords()
         svg.selectAll("path").remove();
         svg.selectAll(".dimension").remove();
         
-        
+        d3.select("#map").selectAll("path").style("fill", function(d,i) {
+            return colors[clusters[i]];
+
+        });
 
         // Add grey background lines for context.
             background = svg.append("svg:g")
@@ -120,7 +126,10 @@ function ParallelCoords()
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d) { return color(d['kommun']); })
+            .style("stroke", function(d, i) { 
+                return colors[clusters[i]];
+                //return color(d['kommun']); 
+            })
             
             .on("mousemove", function(d) {
                 
@@ -228,7 +237,10 @@ function ParallelCoords()
 
     function resetColors()
     {
-        d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke", function(d){ return color(d['kommun']); })
+        d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke", function(d, i){ 
+            return colors[clusters[i]];
+            //return color(d['kommun']); 
+        })
         .style("stroke-opacity", "0.7").style("stroke-width", "1px");
     }
     
