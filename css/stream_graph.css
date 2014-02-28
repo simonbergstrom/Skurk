@@ -16,13 +16,14 @@
 	background-color: white;
 	border: 1px solid #aaa;
 	border-radius: 5px;
-	z-index: 1;
+	z-index: 100;
 	position: absolute;
 	margin-left: 63px;
 	display: none;
 	overflow:scroll;
-	width: 178px;
+	width: 153px;
 	max-height: 270px;
+	float: left;
 	
 }
 
@@ -46,4 +47,18 @@
 #streamGraph .kommundiv:hover
 {
 	background-color: #eee;
+}
+
+.form-inline {
+	width: 500px;
+	padding-top: 5px;
+	padding-left: 30px;
+}
+
+#errorMessage {
+	display: inline-block;
+	color: #B74934;
+	font-weight: bold;
+	font-size: 14px;
+	padding-left: 5px;
 }

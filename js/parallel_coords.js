@@ -61,7 +61,7 @@ function ParallelCoords()
         }
 
         self.data = newData;
-        clusters = pam(self.data, 2);
+        clusters = pam(self.data, 3);
 
 
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
@@ -282,7 +282,7 @@ function ParallelCoords()
     
     //Called by other views
     this.markLine = function(value){
-        console.log(value);
+
         d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke-width", function(d){ return d["kommun"] != value ? null : "6px" })
         .style("stroke-opacity", function(d){
 

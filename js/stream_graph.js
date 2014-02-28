@@ -228,7 +228,7 @@ function StreamGraph(){
 		        .style("z-index", "19")
 		        .style("width", "1px")
 		        .style("height", "260px")
-		        .style("top", "36px")
+		        .style("top", "40px")
 		        .style("bottom", "30px")
 		        .style("left", "0px")
 		        .style("background", "#fff");
@@ -277,6 +277,9 @@ function StreamGraph(){
 	// Form the data to fit to the stack operator to create a Stream... z=dataset, t=municipality
 	function layering(z,t)
 	{
+		if(z[t] == undefined)
+			return false;
+
 		var result  = new Array();
 
 		//x = position in x-direction, y0= baseposition i y-direction.(baseline), y = thickness of line
@@ -304,8 +307,20 @@ function StreamGraph(){
 	//Load new data from search menu
     $(document).ready(function(){
 
+		$("body").click (
+			function(e) {
+				if(e.target.id !== "searchResults" && e.target.id !== "searchBox") {
+					$("#searchResults").hide();
+				}
+			}
+		);
+
         $("#searchBox").on('input', function(){
    			var inputText = $(this).val();
+   			
+   			$("#errorMessage").fadeOut(300, function() {
+				$(this).fadeOut(300);
+			});
 
    			// Find municipality
    			$("#searchResults").html("");
@@ -328,23 +343,50 @@ function StreamGraph(){
 
 
    			$(".kommun").click(function(){
+   				$("#errorMessage").fadeOut(300, function() {
+   					$(this).fadeOut(300);
+   				});
 	        	var text = $(this).text();
 	        	$("#searchBox").val(text);
 	        	$("#searchResults").fadeOut(300);
+	        	$("#searchBox").focus();
 			});
         });
 
         $("#searchbtn").click( function() {
 
-        	var searchtxt = $("#searchBox").val();	
+        	var searchtxt = $("#searchBox").val();
 
-        	crimeDataJsonStream = layering(self.data,searchtxt);
-        	layers1 = stack(crimeDataJsonStream);
+        	searchtxt = searchtxt.charAt(0).toUpperCase() + searchtxt.slice(1);
 
-	        markOtherViews(searchtxt); 
+        	crimeDataJsonStream = layering(self.data, searchtxt);
 
-	        transition(layers1);
-        	//draw();
+        	if (!crimeDataJsonStream) {
+
+        		$("#searchBox").val(searchtxt);
+        		$("#errorMessage").hide().html("Kommunen finns ej!").fadeIn(300);
+        	}
+        	else {
+
+        		$("#searchBox").val("");
+        		$("#searchBox").attr("placeholder", searchtxt);
+
+        		layers1 = stack(crimeDataJsonStream);
+
+	        	markOtherViews(searchtxt); 
+
+		        transition(layers1);
+	        	//draw();
+
+        	}
+    	});
+
+    	$('#searchBox').bind('keypress', function(e) {
+    		if (e.keyCode == 13) {
+    			$("#searchbtn").trigger("click");
+    			$("#searchResults").fadeOut(300);
+    			$("#searchBox").blur();
+    		}
     	});
 
  	}); 

@@ -75,16 +75,20 @@
 
 									<div id="streamGraph">
 
-									<form class="form-inline">
-										  <div class="form-group" >
-										    <label for="exampleInputEmail1" style="font-weight:normal;"> Kommun: </label>
-										    <input  class="form-control" id="searchBox" placeholder="Sök" value = "Hela landet">
-										    <div id = "searchResults">
+										<div class="form-inline">
+											<div class="form-group" >
+											    <label for="exampleInputEmail1" style="font-weight:normal;"> Kommun: </label>
+											    <input  class="form-control input-sm" id="searchBox" placeholder="Hela landet" autocomplete="off">
+											    <div id="searchResults">
 
-										    </div>	
-										  </div>
-										  <button type="button" id="searchbtn" class="btn btn-default">Visa</button>
-										</form>
+												</div>
+											</div>
+											<button type="button" id="searchbtn" class="btn btn-sm btn-default">Visa</button>
+											<div id = "errorMessage">
+
+											</div>
+										</div>
+										
 									</div>
 								</div>
 
@@ -98,12 +102,12 @@
 								<div id="viewBottomLeft" class="col-md-12">
 
 									<div id="parallelCoords">
-										<div class="btn-group" style = "margin: 5px; display: inline-block; float: left;">
-										<p style="float:left;margin-right:5px;"> Månad: </p>
-										  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+										<div class="btn-group" style = "margin: 10px; margin-bottom: 0px; display: inline-block; float: left;">
+										<p style="float:left;margin-right:5px;padding-top: 5px; padding-left: 30px;"> Månad: </p>
+										  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 										   <p id = "chooseData" style="float:left;margin:0;margin-left4px;margin-right:4px;"> helår</p> <span class="caret"></span>
 										  </button>
-										  <ul class="dropdown-menu" role="menu">
+										  <ul class="dropdown-menu" style="max-height: 200px; overflow:scroll;" role="menu">
 										  	<li><a class = "category">helår</a></li>
 										    <li><a class = "category">januari</a></li>
 										    <li><a class = "category">februari</a></li>
@@ -131,8 +135,8 @@
 
 							<div id="map">
 								<div class="btn-group" style = "margin: 5px; display: inline-block; float: left;">
-									<p style="float:left;margin-right:5px;"> Brottskategori: </p>
-									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+									<p style="float:left;margin-right:5px;padding-top: 5px; padding-left: 3px;"> Brottskategori: </p>
+									<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 										<p id = "chooseCategory" style="float:left;margin:0;margin-left4px;margin-right:4px;"> Totalt antal brott</p> <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
