@@ -28,13 +28,18 @@ function StreamGraph(){
 
 	var layers1,stack;
 
-	var padding = 680; // pad the plot on the Y-Axis... 
+	var padding = 1100; // pad the plot on the Y-Axis... 
 
     var streamGraphDiv = $("#streamGraph");
 
     var margin = {top: 20, right: 20, bottom: 30, left: 33},
         width = streamGraphDiv.width() - margin.right - margin.left,
         height = streamGraphDiv.height() - margin.top - margin.bottom;
+
+   	//Månader samt spridning 
+    var months = ["Jan","Feb","Mars","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
+    var diverse = [0,1*width/11, 2*width/11,3*width/11,4*width/11,5*width/11,6*width/11,7*width/11,8*width/11,9*width/11,10*width/11,width];
+
 
     var area;
 	var svg = d3.select("#streamGraph").append("svg")
@@ -74,11 +79,6 @@ function StreamGraph(){
 	    var tooltip = d3.select("body").append("div").attr("class","tooltip").style("opacity",0);
 
 	    //X-axel
-
-	    //Månader samt spridning 
-	    var months = ["Jan","Feb","Mars","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"];
-	    var diverse = [0,1*width/11, 2*width/11,3*width/11,4*width/11,5*width/11,6*width/11,7*width/11,8*width/11,9*width/11,10*width/11,width];
-
 		var x = d3.scale.ordinal()
 		    .domain(months)
 		    .range(diverse);    
@@ -121,7 +121,7 @@ function StreamGraph(){
 		    .data(layers1)		  	
 		  	.enter().append("path")
 		    .attr("d", area)
-		    .attr("transform", "translate(0,-40)")
+		    .attr("transform", "translate(0,-30)")
 		    .style("fill", function(p, i) { return colors[i]; })
 		    .style("stroke", function(p, i) { return stroke_colors[i]; })
 		    .style("stroke-opacity", 0.0 )
@@ -245,6 +245,22 @@ function StreamGraph(){
 	}
 	// Useful for transition? 
 	function transition(layer2) {
+
+		//X-axel
+		var x = d3.scale.ordinal()
+		    .domain(months)
+		    .range(diverse);  
+
+		var y = d3.scale.linear()
+		    .domain([0, d3.max(layer2, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y + Math.abs(padding) ; }); })])
+		    .range([height, 0]);
+
+	    // Definera arean på datan som ska representeras
+		area = d3.svg.area()
+			.interpolate("cardinal")
+		    .x(function(d) { return x(d.x); })
+		    .y0(function(d) { return y(d.y0); })
+		    .y1(function(d) { return y(d.y0 + d.y); });
 
 		d3.selectAll("path")
 			.data(function() {
