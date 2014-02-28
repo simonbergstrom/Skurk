@@ -302,7 +302,7 @@ function StreamGraph(){
    			
 				if(test != null)
    				{
-   					$("#searchResults").append("<a style='padding:0px;margin:0px;cursor:pointer;' class='kommun'>" + municipalities[i] + "</a><br />"); 
+   					$("#searchResults").append("<div class='kommundiv'><a style='cursor:pointer;' class='kommun'>" + municipalities[i] + "</a></div>"); 
    				}	
    			}
    			$("#searchResults").fadeIn(300);

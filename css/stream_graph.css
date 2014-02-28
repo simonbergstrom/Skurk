@@ -18,11 +18,32 @@
 	border-radius: 5px;
 	z-index: 1;
 	position: absolute;
-	padding: 5px;
 	margin-left: 63px;
 	display: none;
 	overflow:scroll;
 	width: 178px;
 	max-height: 270px;
 	
+}
+
+#streamGraph .kommundiv
+{	
+	width: 178px;
+	cursor: pointer;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 7px;
+	margin-left: 0px;
+}
+
+#streamGraph .kommundiv .kommun
+{
+	color: #666;
+	text-decoration: none;
+	padding-right: 70px;
+}
+
+#streamGraph .kommundiv:hover
+{
+	background-color: #eee;
 }
