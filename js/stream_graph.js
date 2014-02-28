@@ -395,7 +395,7 @@ function StreamGraph(){
  	{
  		crimeDataJsonStream = layering(self.data, value);
  		layers1 = stack(crimeDataJsonStream);
- 		$("#searchBox").val(value);
+ 		$("#searchBox").attr("placeholder", value);
  		
  		transition(layers1);
  		//draw();
