@@ -23,7 +23,7 @@ function Map(){
 	var mapDiv = $("#map");
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 	var width = mapDiv.width() - margin.right - margin.left + 40;
-    var height = mapDiv.height() - margin.top - margin.bottom + 39.5;
+    var height = mapDiv.height() - margin.top - margin.bottom + 40;
     var infoText;
     var geoData;
 
@@ -36,7 +36,7 @@ function Map(){
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("margin-top", "-39px")
+        .style("margin-top", "0px")
         .call(zoom);
 
     var projection = d3.geo.mercator()
@@ -80,21 +80,6 @@ function Map(){
 	});
 
 
-    $(document).ready(function(){
-        $(".crimeCategory").click(function(e){
-
-            var category = $(this).text();
-            $("#chooseCategory").text(category); 
-
-            $("#crimeType").html(category);
-            //console.log(category);
-
-            draw(geoData);
-
-        });
-    });
-
-
 
     // Draw map
     function draw(geoData) {
@@ -113,8 +98,16 @@ function Map(){
             })
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
+
+                d3.select("#map").selectAll("path").transition().duration(100)
+                    .style('fill-opacity', function(d) {
+                            return 1.0;
+                    })
+                    .style('stroke-opacity', function(d) {
+                            return 0.0;
+                    });
                 
-                 d3.select(this).transition().duration(100)
+                d3.select(this).transition().duration(100)
     				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });
 
                 infoText.html(d.properties.name);
@@ -127,7 +120,10 @@ function Map(){
 
     			infoText.html("Kommun");
 
-        });
+            })
+            .on("click", function(d){
+                markOtherViews(d.properties.name);
+            });
 
         drawLegend();
 		
@@ -247,5 +243,82 @@ function Map(){
         return counter;
 
 	}
+
+    this.markMun = function(value){
+
+        d3.select("#map").selectAll("path").transition().duration(100)
+            .style('fill-opacity', function(d) {
+                if (d.properties.name == value)
+                    return 0.4;
+                else
+                    return 1.0;
+            })
+            .style('stroke-opacity', function(d) {
+                if (d.properties.name == value)
+                    return 1.0;
+                else
+                    return 0.0;
+            });
+
+        infoText.html(value);
+
+    };
+
+    function markOtherViews(value)
+    {
+        streamGraph.markMunicipality(value);
+        parallelCoords1.markLine(value);
+    }
+
+    $(document).ready(function(){
+
+        $("#clusterbtn").bootstrapSwitch();
+        $('#clusterbtn').bootstrapSwitch('state', false);
+
+        $('#clusterbtn').on('switchChange', function (e, data) {
+            var $element = $(data.el),
+            value = data.value;
+
+            var col = parallelCoords1.getColors();
+            
+            if (value) {
+                d3.select("#map").selectAll("path").style("fill", function(d,i) {
+                    return col[clusters[i]];
+                });
+            }
+            else {
+                d3.select("#map").selectAll("path").style("fill", function(d,i) {
+                    return colors[quantize(d)];
+                });
+            }
+        });
+
+
+        $(".crimeCategory").click(function(e){
+
+            var category = $(this).text();
+            $("#chooseCategory").text(category); 
+
+            $("#crimeType").html(category);
+
+            d3.select("#map").selectAll("path").style("fill", function(d,i) {
+                return colors[quantize(d)];
+            });
+
+            $('#clusterbtn').bootstrapSwitch('state', false);
+
+        });
+
+
+    });
+
+
+
+
+
+
+
+
+
 
 }

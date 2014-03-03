@@ -3,10 +3,13 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title> Skurk </title>
+		<title> Skurk</title>
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
+
+		<!-- Bootstrap Switch CSS -->
+		<link rel="stylesheet" href="libraries/bootstrap/css/bootstrap-switch.min.css">
 
 		<!-- Skurk CSS -->
 		<link rel="stylesheet" href="css/intro.css">
@@ -20,6 +23,9 @@
 
 		<!-- Bootstrap JS -->
 		<script src="libraries/bootstrap/js/bootstrap.min.js"></script>
+
+		<!-- Bootstrap Switch JS -->
+		<script src="libraries/bootstrap/js/bootstrap-switch.min.js"></script>
 
 		<!-- D3 JS -->
 		<script src="libraries/d3.v3/d3.v3.min.js"></script>
@@ -57,7 +63,7 @@
 	            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 					<div class="container">
 						<div class="navbar-header" >
-							<a class="navbar-brand" href="" style="color:#E9E8E3">Skurk</a>
+							<a class="navbar-brand" href="" style="color:#E9E8E3">Skurk - Brottsvisualisering 2013</a>
 						</div>
 					</div>
 				</div>
@@ -134,7 +140,7 @@
 						<div id="viewRight" class="col-md-4">
 
 							<div id="map">
-								<div class="btn-group" style = "margin: 5px; display: inline-block; float: left;">
+								<div class="btn-group" style = "margin-top: 5px; margin-left: 5px; display: inline-block; float: left; width: 400px; z-index: 2; position: absolute;">
 									<p style="float:left;margin-right:5px;padding-top: 5px; padding-left: 3px;"> Brottskategori: </p>
 									<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 										<p id = "chooseCategory" style="float:left;margin:0;margin-left4px;margin-right:4px;"> Totalt antal brott</p> <span class="caret"></span>
@@ -150,7 +156,11 @@
 										<li><a class = "crimeCategory">Vissa trafikbrott</a></li>
 										<li><a class = "crimeCategory">Alkohol- och narkotikabrott</a></li>
 										<li><a class = "crimeCategory">Vapenbrott</a></li>							    
-									</ul>									
+									</ul><br>						
+								</div>
+								<div class="btn-group" style = "margin-top: 40px; margin-left: 5px; display: inline-block; float: left; z-index: 1; position: absolute;">
+									<p style="float:left;margin-right:5px;padding-top: 5px; padding-left: 3px;"> Klustrering: </p>
+									<input id="clusterbtn" type="checkbox" checked data-size="small">
 								</div>
 							</div>
 

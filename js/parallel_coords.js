@@ -1,8 +1,10 @@
+
+var clusters;
+
 function ParallelCoords()
 {
 
     var colors = ['rgb(228,26,28)','rgb(55,126,184)','rgb(77,175,74)','rgb(152,78,163)','rgb(255,127,0)','rgb(255,255,51)','rgb(166,86,40)','rgb(247,129,191)'];
-    var clusters;
 
 	//Some initial stuff needed for parallel Coordinates.
 
@@ -88,12 +90,13 @@ function ParallelCoords()
     function draw(){
         svg.selectAll("path").remove();
         svg.selectAll(".dimension").remove();
-        
+        /*
         // HÄR MÅLAR VI OM KARTAN FÖR SKOJS SKULLL JOHN HIOOLLELELLEMNENNN MODERAT 2014
         d3.select("#map").selectAll("path").style("fill", function(d,i) {
             return colors[clusters[i]];
 
         });
+        */
 
         // Add grey background lines for context.
             background = svg.append("svg:g")
@@ -309,9 +312,14 @@ function ParallelCoords()
     
     };
 
+    this.getColors = function() {
+        return colors;
+    };
+
     function markOtherViews(value)
     {
         streamGraph.markMunicipality(value);
+        map.markMun(value);
     }
     
 
