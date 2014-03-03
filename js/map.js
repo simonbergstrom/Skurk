@@ -99,13 +99,21 @@ function Map(){
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
 
-                d3.select("#map").selectAll("path").transition().duration(100)
-                    .style('fill-opacity', function(d) {
-                            return 1.0;
-                    })
-                    .style('stroke-opacity', function(d) {
-                            return 0.0;
-                    });
+                var clusterVal = $('#clusterbtn').bootstrapSwitch('state');
+
+                if (clusterVal) {
+                    var col = parallelCoords1.getColors();
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            return col[clusters[i]];
+                        });
+                }
+                else {
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            return colors[quantize(d)];
+                        });
+                }
                 
                 d3.select(this).transition().duration(100)
     				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });
@@ -247,17 +255,11 @@ function Map(){
     this.markMun = function(value){
 
         d3.select("#map").selectAll("path").transition().duration(100)
-            .style('fill-opacity', function(d) {
+            .style('fill', function(d) {
                 if (d.properties.name == value)
-                    return 0.4;
+                    return "#f00";
                 else
-                    return 1.0;
-            })
-            .style('stroke-opacity', function(d) {
-                if (d.properties.name == value)
-                    return 1.0;
-                else
-                    return 0.0;
+                    return "#444";
             });
 
         infoText.html(value);

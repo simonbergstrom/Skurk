@@ -302,6 +302,7 @@ function StreamGraph(){
 	function markOtherViews(value)
 	{
 		parallelCoords1.markLine(value);
+		map.markMun(value);
 	}
 
 	//Load new data from search menu
