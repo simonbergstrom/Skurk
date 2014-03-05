@@ -4,9 +4,11 @@ var clusters;
 function ParallelCoords()
 {
 
-    var colors = ['rgb(228,26,28)','rgb(55,126,184)','rgb(77,175,74)','rgb(152,78,163)','rgb(255,127,0)','rgb(255,255,51)','rgb(166,86,40)','rgb(247,129,191)'];
-
-	//Some initial stuff needed for parallel Coordinates.
+    //var colors = ['rgb(228,26,28)','rgb(55,126,184)','rgb(77,175,74)','rgb(152,78,163)','rgb(255,127,0)','rgb(255,255,51)','rgb(166,86,40)','rgb(247,129,191)'];
+    //var colors = ['rgb(27,158,119)','rgb(217,95,2)','rgb(117,112,179)','rgb(231,41,138)','rgb(102,166,30)','rgb(230,171,2)','rgb(166,118,29)','rgb(102,102,102)'];
+    //var colors = ['#a50026', '#006837', '#313695', '#ffff33', '#542788', '#b35806', '#c51b7d', '#01665e'];
+	var colors = ['#51a351', '#bd362f', '#0044cc', '#f89406', '#2f96b4', '#542788', '#b35806', '#c51b7d'];
+    //Some initial stuff needed for parallel Coordinates.
 
 	var self = this; // for internal d3 functions
 
@@ -63,7 +65,7 @@ function ParallelCoords()
         }
 
         self.data = newData;
-        clusters = pam(self.data, 3);
+        clusters = pam(self.data, $("#chooseClusters").text());
 
 
         x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
@@ -90,13 +92,6 @@ function ParallelCoords()
     function draw(){
         svg.selectAll("path").remove();
         svg.selectAll(".dimension").remove();
-        /*
-        // HÄR MÅLAR VI OM KARTAN FÖR SKOJS SKULLL JOHN HIOOLLELELLEMNENNN MODERAT 2014
-        d3.select("#map").selectAll("path").style("fill", function(d,i) {
-            return colors[clusters[i]];
-
-        });
-        */
 
         // Add grey background lines for context.
             background = svg.append("svg:g")
@@ -122,7 +117,7 @@ function ParallelCoords()
                .style("opacity", 0);
                  
             });
-                
+            
         // Add colored lines for focus
             foreground = svg.append("svg:g")
             .attr("class", "foreground")
@@ -130,7 +125,8 @@ function ParallelCoords()
             .data(self.data)
             .enter().append("svg:path")
             .attr("d", path)
-            .style("stroke", function(d, i) { 
+            .style("stroke", function(d, i) {
+
                 return colors[clusters[i]];
                 //return color(d['kommun']); 
             })
@@ -254,7 +250,7 @@ function ParallelCoords()
 
         $(".category").click(function(e){
             var category = $(this).text(); 
-            $("#chooseData").text(category);    
+            $("#chooseData").text(category);
            
             d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
                      
@@ -272,6 +268,7 @@ function ParallelCoords()
                 }
 
                 self.data = newData;
+                clusters = pam(self.data, $("#chooseClusters").text());
                 
                 x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
                     return d != "kommun" && (y[d] = d3.scale.linear()
@@ -280,6 +277,38 @@ function ParallelCoords()
                 }));
                 draw();                 
             });   
+        });
+
+        $(".clusters").click(function(e){
+            var clusterCount = $(this).text(); 
+            $("#chooseClusters").text(clusterCount); 
+
+            d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+                     
+                var newData = [];
+
+                for (var i = 0; i < csv.length; i+=10) 
+                {    
+                    var crimeType = {};
+                    for (var j = 0; j < 10; j++) 
+                    {        
+                        crimeType['kommun'] = csv[i+j]['kommun'];        
+                        crimeType[csv[i+j]['typ']] = csv[i+j][$("#chooseData").text() + " /100000"];
+                    }
+                    newData[(i/10)] = crimeType;
+                }
+
+                self.data = newData;
+                clusters = pam(self.data, $("#chooseClusters").text());
+                
+                x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+                    return d != "kommun" && (y[d] = d3.scale.linear()
+                    .domain(d3.extent(self.data, function(p) { return +p[d]; }))
+                    .range([height, 0]));
+                }));
+                draw();
+                map.reColor();              
+            });
         });
     });
     

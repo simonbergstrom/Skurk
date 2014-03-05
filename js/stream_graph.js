@@ -231,17 +231,24 @@ function StreamGraph(){
 		        .style("top", "40px")
 		        .style("bottom", "30px")
 		        .style("left", "0px")
-		        .style("background", "#fff");
+		        .style("visibility", "hidden")
+		        .style("background", "#777");
 
 		d3.select("#streamGraph")
 		    .on("mousemove", function(){  
 		        mousex = d3.mouse(this);
+		        var mousey = mousex[1];
 		        mousex = mousex[0] + 5;
-		        vertical.style("left", mousex + "px" )})
-		    .on("mouseover", function(){  
-		        mousex = d3.mouse(this);
-		        mousex = mousex[0] + 5;
-		        vertical.style("left", mousex + "px")});
+
+		        vertical.style("left", mousex + "px" )
+		        vertical.style("visibility", function() {
+		    		if (mousex < margin.left || mousex > width+margin.left || mousey < 40 || mousey > 300)
+		    			return "hidden";
+		    		else
+		    			return "visible"
+		    	})
+
+		    });
 	}
 	// Useful for transition? 
 	function transition(layer2) {

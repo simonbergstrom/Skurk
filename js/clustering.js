@@ -1,5 +1,5 @@
 
-var totalCost;
+/*var totalCost;
 
 function pam(data, k) {
 
@@ -10,8 +10,8 @@ function pam(data, k) {
 
 
 
-	var newClusters;	
-
+	var newClusters = clusters;	
+	
 	for (var i = 0; i < k; ++i) {
 		newMediods = mediods;
 
@@ -25,12 +25,13 @@ function pam(data, k) {
 				newClusters = calcCluster(data, dist_mediods);
 
 				if (oldCost > totalCost) {
+					//console.log(totalCost);
 					mediods = newMediods;
 				}
 			}
 		}
 	}
-
+	
 	return newClusters;
 
 }
@@ -112,15 +113,133 @@ function calcCluster(data, dist_mediods) {
 
 	return clusters;
 
+}*/
+
+
+
+function pam(data, k) {
+
+	var mediods = [];
+	var clusters = [];
+	var cost = [];
+	var oldCost = null;
+	var gogogo = true;
+
+	// Step 1: Randomly select medoids centers of existing ugly data points
+	for (var a = 0; a < k; ++a) {
+		var randomPoint = Math.floor(Math.random() * (data.length - 1 - 0 + 1) + 0);
+		
+		var dataPoint = data[randomPoint];
+		var mediodPoint = {};
+		for (var key in dataPoint) {
+			mediodPoint[key] = dataPoint[key];
+		}
+
+		mediods.push(mediodPoint);
+	}
+
+
+	do {
+
+		gogogo = false;
+
+		// Initialize cost, bring the ca$h
+		cost = [];
+		for (var e = 0; e < mediods.length; ++e)
+			cost.push(0);
+
+		// Step 2: Divide the god damn data points into awesome clusters depending on their eucledian distance
+		for (var c = 0; c < data.length; ++c) {
+			
+			var closestPointPosition = 0;
+			var closestPointValue = calculateDistance(data[c], mediods[0]);
+
+			for (var d = 1; d < mediods.length; ++d) {
+				var secondClosestPointValue = calculateDistance(data[c], mediods[d])
+				if (closestPointValue > secondClosestPointValue) {
+					closestPointValue = secondClosestPointValue;
+					closestPointPosition = d;
+				}
+			}
+
+			cost[closestPointPosition] += closestPointValue;
+			clusters.push(closestPointPosition);
+		}
+
+
+		// Step 3: Find a new and better medoid for each cluster, if you find it, run motherfucking while-loop again.
+		for (var f = 0; f < mediods.length; ++f) {
+			var currentCost = cost[f];
+
+			for (var g = 0; g < data.length; ++g) {
+				if (f == clusters[g]) {
+					var newCost = 0;
+					var newMediodPoint = data[g];
+
+					for (var h = 0; h < data.length; ++h) {
+						var newDataPoint = data[h];
+						if (newMediodPoint["kommun"] != newDataPoint["kommun"] && f == clusters[h]) {
+							newCost += calculateDistance(newDataPoint, newMediodPoint)
+						}
+					}
+
+					if (newCost < currentCost) {			
+						mediods[f] = newMediodPoint;
+						currentCost = newCost;
+					}
+				}
+			}
+		}
+
+		var totalCost = 0;
+
+		if (oldCost == null) {
+			oldCost = cost;
+			gogogo = true;
+			for (var j = 0; j < cost.length; ++j)
+				totalCost += cost[j];
+		}
+		else {
+			for (var i = 0; i < cost.length; ++i) {
+				totalCost += cost[i];
+				if (oldCost[i] != cost[i]) {
+					oldCost = cost;
+					gogogo = true;
+				}
+			}
+		}
+
+		console.log("OBS: DEN HÄR LOGGEN SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
+		console.log("Total cost of clustering algorithm: " + totalCost);
+		console.log(" ");
+		
+	} while(gogogo)
+
+	return clusters;
 }
 
 
+function calculateDistance(dataPoint, mediodPoint) {
 
+	var distance = 0;
+	for (var key in dataPoint) {
+		if (key != "kommun") {
+			//distance += Math.pow(calculateRelativeValue(key, mediodPoint[key]) - calculateRelativeValue(key, dataPoint[key]), 2);
+			distance += Math.pow(mediodPoint[key] - dataPoint[key], 2);
+		}
+	}
 
+	distance = parseInt(Math.sqrt(distance));
+	
+	return distance;
+}
 
+function calculateRelativeValue(key, value) {
+	var difference = boundaries[key][1] - boundaries[key][0];
+	var relativeValue = Math.round((value/difference) * 100);
 
-
-
+	return relativeValue;
+}
 
 
 

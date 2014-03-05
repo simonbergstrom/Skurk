@@ -24,6 +24,7 @@ function Map(){
 	var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 	var width = mapDiv.width() - margin.right - margin.left + 40;
     var height = mapDiv.height() - margin.top - margin.bottom + 40;
+    var ls_w = 15, ls_h = 15;
     var infoText;
     var geoData;
 
@@ -133,13 +134,11 @@ function Map(){
                 markOtherViews(d.properties.name);
             });
 
-        drawLegend();
+        drawOriginalLegend();
 		
     }
 
-    function drawLegend() {
-
-        var ls_w = 15, ls_h = 15;
+    function drawOriginalLegend() {
 
         // Create legend labels
         var legend_labels = [];
@@ -187,6 +186,7 @@ function Map(){
         $("#info").html("Per 100 000 inv.");
 
         legend.append("rect")
+            .attr("class", "legendRects")
             .attr("x", 250)
             .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h - 5;})
             .attr("width", ls_w)
@@ -195,12 +195,88 @@ function Map(){
             .style("opacity", 1.0);
 
         legend.append("text")
+            .attr("class", "legendRectsText")
             .attr("x", 280)
             .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 9;})
             .style("fill", "#333333")
-            .html(function(d, i){ return legend_labels[i]; });
+            .html(function(d, i){ return legend_labels[i]; })
 
 
+    }
+
+    function drawClusterLegend(clusterCount) {
+
+        //var legend = svg.selectAll("g.legend");
+
+        // Create legend labels
+        var legend_labels = [];
+        var legend_values = [];
+        for (var i = 1; i <= clusterCount; i++) {
+
+            var label = "";
+
+            label = "Kluster " + i;
+
+            legend_labels.push(label);
+            legend_values.push(i);
+        }
+
+        $("#crimeType").html("");
+        $("#info").html("Kommunerna är klustrerade efter kategorier.");
+
+        svg.selectAll("g.legend").remove();
+
+        var legend = svg.selectAll("g.legend")
+            .data(legend_values)
+            .enter().append("g")
+            .attr("class", "legend");
+
+        infoText = legend.append("text")
+            .attr("x", 250)
+            .attr("y", height - 183)
+            .attr("class", "infoText")
+            .style("fill", "#333333")
+            .text("Kommun");
+
+        legend.append("text")
+            .attr("id", "info_1")
+            .attr("x", 250)
+            .attr("y", height - 169)
+            .style("fill", "#333333");
+
+        legend.append("text")
+            .attr("id", "info_2")
+            .attr("x", 250)
+            .attr("y", height - 157)
+            .style("fill", "#333333");
+        
+        legend.append("text")
+            .attr("id", "info_3")
+            .attr("x", 250)
+            .attr("y", height - 145)
+            .style("fill", "#333333");
+
+        $("#info_1").html("Kommuerna med samma färg");
+        $("#info_2").html("har liknande profiler baserat");
+        $("#info_3").html("på brottskategori.");
+
+        var col = parallelCoords1.getColors();
+
+        legend.append("rect")
+            .attr("class", "legendRects")
+            .attr("x", 250)
+            .attr("y", function(d, i){ return height - ((7-i)*ls_h) - 2*ls_h - 5;})
+            .attr("width", ls_w)
+            .attr("height", ls_h)
+            .style("fill", function(d, i) { return col[i]; })
+            .style("opacity", 1.0);
+
+        legend.append("text")
+            .attr("class", "legendRectsText")
+            .attr("x", 280)
+            .attr("y", function(d, i){ return height - ((7-i)*ls_h) - ls_h - 9;})
+            .style("fill", "#333333")
+            .html(function(d, i){ return legend_labels[i]; })
     }
 
     // Zoom and panning
@@ -255,6 +331,7 @@ function Map(){
     this.markMun = function(value){
 
         d3.select("#map").selectAll("path").transition().duration(100)
+            .transition().duration(500)
             .style('fill', function(d) {
                 if (d.properties.name == value)
                     return "#f00";
@@ -265,6 +342,19 @@ function Map(){
         infoText.html(value);
 
     };
+
+    this.reColor = function() {
+        if ($('#clusterbtn').bootstrapSwitch('state')) {
+            var col = parallelCoords1.getColors();
+            d3.select("#map").selectAll("path")
+                .transition().duration(500)
+                .style("fill", function(d,i) {
+                    return col[clusters[i]];
+                });
+
+            drawClusterLegend($("#chooseClusters").text());
+        }
+    }
 
     function markOtherViews(value)
     {
@@ -284,14 +374,22 @@ function Map(){
             var col = parallelCoords1.getColors();
             
             if (value) {
-                d3.select("#map").selectAll("path").style("fill", function(d,i) {
-                    return col[clusters[i]];
-                });
+                d3.select("#map").selectAll("path")
+                    .transition().duration(500)
+                    .style("fill", function(d,i) {
+                        return col[clusters[i]];
+                    });
+
+                drawClusterLegend($("#chooseClusters").text());
             }
             else {
-                d3.select("#map").selectAll("path").style("fill", function(d,i) {
-                    return colors[quantize(d)];
-                });
+                d3.select("#map").selectAll("path")
+                    .transition().duration(500)
+                    .style("fill", function(d,i) {
+                        return colors[quantize(d)];
+                    });
+
+                drawOriginalLegend();
             }
         });
 

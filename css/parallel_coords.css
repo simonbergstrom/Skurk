@@ -58,7 +58,7 @@
     cursor: move;
 }
 
-.category
+.category, .clusters
 {
     cursor: pointer;
 }
