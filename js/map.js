@@ -101,12 +101,33 @@ function Map(){
             .on("mousemove", function(d) {
 
                 var clusterVal = $('#clusterbtn').bootstrapSwitch('state');
+                var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
 
                 if (clusterVal) {
                     var col = parallelCoords1.getColors();
                     d3.select("#map").selectAll("path")
                         .style("fill", function(d,i) {
                             return col[clusters[i]];
+                        });
+                }
+                else if (clusterValMonth) {
+                    var kommun = $("#searchBox").attr("placeholder");
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            var color = "#444";
+                            
+                            if (stream_clusters[kommun] != undefined) {
+                                for (var i = 0; i < stream_clusters[kommun].length; ++i) {
+                                    if (stream_clusters[kommun][i] == d.properties.name)
+                                        color = "#66bd63";
+                                }
+                            }
+
+                            if (kommun == d.properties.name) {
+                                color = "#006837";
+                            } 
+
+                            return color;
                         });
                 }
                 else {
@@ -131,6 +152,33 @@ function Map(){
 
             })
             .on("click", function(d){
+
+                d3.select()
+
+                var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
+
+                if (clusterValMonth) {
+
+                    d3.select(this)
+                        .style("fill", function(d,i) {
+                            d3.select("#map").selectAll("path")
+                                .style("fill", function(p,i) {
+                                    var color = "#444";
+
+                                    if (stream_clusters[d.properties.name] != undefined) {
+                                        for (var i = 0; i < stream_clusters[d.properties.name].length; ++i) {
+                                            if (stream_clusters[d.properties.name][i] == p.properties.name)
+                                                color = "#66bd63";
+                                        }
+                                    }
+
+                                    return color;
+                                }); 
+
+                            return "#006837";
+                        });
+                }
+
                 markOtherViews(d.properties.name);
             });
 
@@ -206,8 +254,6 @@ function Map(){
 
     function drawClusterLegend(clusterCount) {
 
-        //var legend = svg.selectAll("g.legend");
-
         // Create legend labels
         var legend_labels = [];
         var legend_values = [];
@@ -220,9 +266,6 @@ function Map(){
             legend_labels.push(label);
             legend_values.push(i);
         }
-
-        $("#crimeType").html("");
-        $("#info").html("Kommunerna är klustrerade efter kategorier.");
 
         svg.selectAll("g.legend").remove();
 
@@ -256,7 +299,7 @@ function Map(){
             .attr("y", height - 145)
             .style("fill", "#333333");
 
-        $("#info_1").html("Kommuerna med samma färg");
+        $("#info_1").html("Kommunerna med samma färg");
         $("#info_2").html("har liknande profiler baserat");
         $("#info_3").html("på brottskategori.");
 
@@ -277,6 +320,69 @@ function Map(){
             .attr("y", function(d, i){ return height - ((7-i)*ls_h) - ls_h - 9;})
             .style("fill", "#333333")
             .html(function(d, i){ return legend_labels[i]; })
+    }
+
+    function drawClusterMonthLegend() {
+
+        // Create legend labels
+        var legend_labels = ["Vald kommun", "Liknande årsprofiler", "Övriga"];
+        var legend_values = [1, 2, 3];
+        var legend_colors = ["#006837", "#66bd63", "#444"];
+
+        svg.selectAll("g.legend").remove();
+
+        var legend = svg.selectAll("g.legend")
+            .data(legend_values)
+            .enter().append("g")
+            .attr("class", "legend");
+
+        infoText = legend.append("text")
+            .attr("x", 250)
+            .attr("y", height - 128)
+            .attr("class", "infoText")
+            .style("fill", "#333333")
+            .text("Kommun");
+
+        legend.append("text")
+            .attr("id", "info_1")
+            .attr("x", 250)
+            .attr("y", height - 114)
+            .style("fill", "#333333");
+
+        legend.append("text")
+            .attr("id", "info_2")
+            .attr("x", 250)
+            .attr("y", height - 102)
+            .style("fill", "#333333");
+        
+        legend.append("text")
+            .attr("id", "info_3")
+            .attr("x", 250)
+            .attr("y", height - 90)
+            .style("fill", "#333333");
+
+        $("#info_1").html("Kommunerna som visas i färg");
+        $("#info_2").html("på kartan har liknande");
+        $("#info_3").html("årsprofiler.");
+
+        var col = parallelCoords1.getColors();
+
+        legend.append("rect")
+            .attr("class", "legendRects")
+            .attr("x", 250)
+            .attr("y", function(d, i){ return height - ((3-i)*ls_h) - 2*ls_h - 5;})
+            .attr("width", ls_w)
+            .attr("height", ls_h)
+            .style("fill", function(d, i) { return legend_colors[i]; })
+            .style("opacity", 1.0);
+
+        legend.append("text")
+            .attr("class", "legendRectsText")
+            .attr("x", 280)
+            .attr("y", function(d, i){ return height - ((3-i)*ls_h) - ls_h - 9;})
+            .style("fill", "#333333")
+            .html(function(d, i){ return legend_labels[i]; })
+
     }
 
     // Zoom and panning
@@ -328,16 +434,44 @@ function Map(){
 
 	}
 
-    this.markMun = function(value){
+    this.markMun = function(value) {
 
-        d3.select("#map").selectAll("path").transition().duration(100)
-            .transition().duration(500)
-            .style('fill', function(d) {
-                if (d.properties.name == value)
-                    return "#f00";
-                else
-                    return "#444";
-            });
+        var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
+
+        if (clusterValMonth) {
+            var kommun = $("#searchBox").attr("placeholder");
+            d3.select("#map").selectAll("path")
+                .style("fill", function(d,i) {
+                    var color = "#444";
+        
+                    if (stream_clusters[kommun] != undefined) {
+                        for (var i = 0; i < stream_clusters[kommun].length; ++i) {
+                            if (stream_clusters[kommun][i] == d.properties.name)
+                                color = "#66bd63";
+                        }
+                    }
+
+                    if (kommun == d.properties.name) {
+                        color = "#006837";
+                    } 
+
+                    return color;
+                });
+
+            drawClusterMonthLegend();
+        }
+        else {
+            d3.select("#map").selectAll("path").transition().duration(100)
+                .transition().duration(500)
+                .style('fill', function(d) {
+                    if (d.properties.name == value)
+                        return "#f00";
+                    else if (value == "Hela landet")
+                        return "#f00";
+                    else
+                        return "#444";
+                });
+        }
 
         infoText.html(value);
 
@@ -366,6 +500,8 @@ function Map(){
 
         $("#clusterbtn").bootstrapSwitch();
         $('#clusterbtn').bootstrapSwitch('state', false);
+        $("#clusterbtn_stream").bootstrapSwitch();
+        $('#clusterbtn_stream').bootstrapSwitch('state', false);
 
         $('#clusterbtn').on('switchChange', function (e, data) {
             var $element = $(data.el),
@@ -381,6 +517,45 @@ function Map(){
                     });
 
                 drawClusterLegend($("#chooseClusters").text());
+            }
+            else {
+                d3.select("#map").selectAll("path")
+                    .transition().duration(500)
+                    .style("fill", function(d,i) {
+                        return colors[quantize(d)];
+                    });
+
+                drawOriginalLegend();
+            }
+        });
+
+        $('#clusterbtn_stream').on('switchChange', function (e, data) {
+            var $element = $(data.el),
+            value = data.value;
+
+            if (value) {
+                var kommun = $("#searchBox").attr("placeholder");
+
+                d3.select("#map").selectAll("path")
+                    .transition().duration(500)
+                    .style("fill", function(d,i) {
+                        var color = "#444";
+                        
+                        if (stream_clusters[kommun] != undefined) {
+                            for (var i = 0; i < stream_clusters[kommun].length; ++i) {
+                                if (stream_clusters[kommun][i] == d.properties.name)
+                                    color = "#66bd63";
+                            }
+                        }
+
+                        if (kommun == d.properties.name) {
+                            color = "#006837";
+                        } 
+
+                        return color;
+                    });
+
+                drawClusterMonthLegend();
             }
             else {
                 d3.select("#map").selectAll("path")

@@ -1,5 +1,6 @@
 
 var clusters;
+var stream_clusters;
 
 function ParallelCoords()
 {
@@ -50,6 +51,8 @@ function ParallelCoords()
 
 
     d3.csv("data/crime_monthly_municipatalities_2013.csv", function(csv) {
+
+        stream_clusters = pam_2(csv, 100);
 
         var newData = [];
 
