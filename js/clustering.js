@@ -1,121 +1,4 @@
 
-/*var totalCost;
-
-function pam(data, k) {
-
-	totalCost = 0;
-	var mediods = initialize(k);
-	var dist_mediods = calcDistance(data, mediods);
-	var clusters = calcCluster(data, dist_mediods);
-
-
-
-	var newClusters = clusters;	
-	
-	for (var i = 0; i < k; ++i) {
-		newMediods = mediods;
-
-		for (var j = 0; j < data.length; ++j) {
-			if (i == clusters[j]) {
-				var oldCost = totalCost;
-
-				totalCost = 0;
-				newMediods[i] = data[i];
-				dist_mediods = calcDistance(data, newMediods);
-				newClusters = calcCluster(data, dist_mediods);
-
-				if (oldCost > totalCost) {
-					//console.log(totalCost);
-					mediods = newMediods;
-				}
-			}
-		}
-	}
-	
-	return newClusters;
-
-}
-
-function initialize(k) {
-
-	var mediods = [];
-
-	for (var i = 0; i < k; ++i) {
-
-		var medoid = {};
-
-		for (var key in boundaries) {
-			medoid[key] = Math.floor(Math.random() * (boundaries[key][1] - boundaries[key][0] + 1) + boundaries[key][0]);
-		}
-
-		mediods.push(medoid);
-
-	}
-
-	return mediods;
-	
-}
-
-function calcDistance(data, mediods) {
-
-	var dist_mediods = [];
-
-	for (var i = 0; i < mediods.length; ++i) {
-
-		var dist_mediod = [];
-
-		for (var j = 0; j < data.length; ++j) {
-
-			var dist = 0;
-
-			for (var key in data[j]) {
-
-				if (key != 'kommun') {
-					dist += Math.abs(data[j][key] - mediods[i][key]);
-				}
-
-			}
-
-			dist_mediod.push(dist);
-
-		}
-
-		dist_mediods.push(dist_mediod);
-
-	}
-
-	return dist_mediods;
-
-}
-
-function calcCluster(data, dist_mediods) {
-
-	var clusters = [];
-
-	for (var i = 0; i < data.length; ++i) {
-
-		var smallest_dist = dist_mediods[0][i];
-		var cluster = 0;
-
-		for (var j = 1; j < dist_mediods.length; ++j) {
-
-			if (dist_mediods[j][i] < smallest_dist) {
-				smallest_dist = dist_mediods[j][i];
-				cluster = j;
-			}
-				
-		}
-
-		totalCost += smallest_dist;
-		clusters.push(cluster);
-
-	}
-
-	return clusters;
-
-}*/
-
-
 
 function pam(data, k) {
 
@@ -209,10 +92,10 @@ function pam(data, k) {
 			}
 		}
 
-		console.log("OBS: DEN HÄR LOGGEN SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
-		console.log("PARALLEL COORDS CLUSTERING");
-		console.log("Total cost of clustering algorithm: " + totalCost);
-		console.log(" ");
+		//console.log("OBS: DEN HÄR LOGGEN SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
+		//console.log("PARALLEL COORDS CLUSTERING");
+		//console.log("Total cost of clustering algorithm: " + totalCost);
+		//console.log(" ");
 		
 	} while(gogogo)
 
@@ -336,15 +219,27 @@ function pam_2(data, k) {
 			}
 		}
 		
-		console.log("OBS: DEN HÄR LOGGEN SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
-		console.log("STREAM GRAPH CLUSTERING");
-		console.log("Total cost of clustering algorithm: " + totalCost);
-		console.log(" ");
+		//console.log("OBS: DEN HÄR LOGGEN SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
+		//console.log("STREAM GRAPH CLUSTERING");
+		//console.log("Total cost of clustering algorithm: " + totalCost);
+		//console.log(" ");
 
 	} while(gogogo)
 
+	var new_clusters = {};
 
-	return clusters;
+	for (var key in clusters) {
+		var cluster = clusters[key];
+
+		for (var m = 0; m < cluster.length; ++m) {
+			new_clusters[cluster[m]] = [];
+			for (var n = 0; n < cluster.length; ++n) {
+				new_clusters[cluster[m]].push(cluster[n]);
+			}
+		}
+	}
+
+	return new_clusters;
 
 }
 
