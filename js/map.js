@@ -581,6 +581,7 @@ function Map(){
             });
 
             $('#clusterbtn').bootstrapSwitch('state', false);
+            $('#clusterbtn_stream').bootstrapSwitch('state', false);
 
         });
 
