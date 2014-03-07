@@ -96,6 +96,7 @@ function pam(data, k) {
 		//console.log("PARALLEL COORDS CLUSTERING");
 		//console.log("Total cost of clustering algorithm: " + totalCost);
 		//console.log(" ");
+		console.log("in first do while loop");
 		
 	} while(gogogo)
 
@@ -223,6 +224,7 @@ function pam_2(data, k) {
 		//console.log("STREAM GRAPH CLUSTERING");
 		//console.log("Total cost of clustering algorithm: " + totalCost);
 		//console.log(" ");
+		console.log("in second do while loop");
 
 	} while(gogogo)
 

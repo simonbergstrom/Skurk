@@ -35,6 +35,7 @@ function Map(){
         .on("zoom", move);
 
     var svg = d3.select("#map").append("svg")
+        .attr("id", "mapID")
         .attr("width", width)
         .attr("height", height)
         .style("margin-top", "0px")
@@ -47,7 +48,8 @@ function Map(){
     var path = d3.geo.path()
         .projection(projection);
 
-	g = svg.append("g");
+	g = svg.append("g")
+        .attr("id", "g_mapID");
 	
 	// Load crime data
     d3.json("data/crime_monthly_municipatalities_2013.json", function(data) {
@@ -99,44 +101,7 @@ function Map(){
             })
             .style({ 'stroke-opacity':0.0,'stroke':'#000000' })
             .on("mousemove", function(d) {
-
-                var clusterVal = $('#clusterbtn').bootstrapSwitch('state');
-                var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
-
-                if (clusterVal) {
-                    var col = parallelCoords1.getColors();
-                    d3.select("#map").selectAll("path")
-                        .style("fill", function(d,i) {
-                            return col[clusters[i]];
-                        });
-                }
-                else if (clusterValMonth) {
-                    var kommun = $("#searchBox").attr("placeholder");
-                    d3.select("#map").selectAll("path")
-                        .style("fill", function(d,i) {
-                            var color = "#444";
-                            
-                            if (stream_clusters[kommun] != undefined) {
-                                for (var i = 0; i < stream_clusters[kommun].length; ++i) {
-                                    if (stream_clusters[kommun][i] == d.properties.name)
-                                        color = "#66bd63";
-                                }
-                            }
-
-                            if (kommun == d.properties.name) {
-                                color = "#006837";
-                            } 
-
-                            return color;
-                        });
-                }
-                else {
-                    d3.select("#map").selectAll("path")
-                        .style("fill", function(d,i) {
-                            return colors[quantize(d)];
-                        });
-                }
-                
+    
                 d3.select(this).transition().duration(100)
     				.style({ 'fill-opacity':0.4,'stroke-opacity':1.0 });
 
@@ -177,6 +142,9 @@ function Map(){
 
                             return "#006837";
                         });
+                }
+                else {
+                    map.markMun(d.properties.name);
                 }
 
                 markOtherViews(d.properties.name);
@@ -439,7 +407,7 @@ function Map(){
         var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
 
         if (clusterValMonth) {
-            var kommun = $("#searchBox").attr("placeholder");
+            var kommun = chosen_mun;//$("#searchBox").attr("placeholder");
             d3.select("#map").selectAll("path")
                 .style("fill", function(d,i) {
                     var color = "#444";
@@ -462,7 +430,8 @@ function Map(){
         }
         else {
             d3.select("#map").selectAll("path").transition().duration(100)
-                .transition().duration(500)
+                
+
                 .style('fill', function(d) {
                     if (d.properties.name == value)
                         return "#f00";
@@ -497,6 +466,50 @@ function Map(){
     }
 
     $(document).ready(function(){
+
+        $("#mapID").click(function(e) {
+
+            if(e.target.parentElement.id !== "g_mapID") {
+
+                var clusterVal = $('#clusterbtn').bootstrapSwitch('state');
+                var clusterValMonth = $('#clusterbtn_stream').bootstrapSwitch('state');
+
+                if (clusterVal) {
+                    var col = parallelCoords1.getColors();
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            return col[clusters[i]];
+                        });
+                }
+                else if (clusterValMonth) {
+                    var kommun = chosen_mun;//$("#searchBox").attr("placeholder");
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            var color = "#444";
+                            
+                            if (stream_clusters[kommun] != undefined) {
+                                for (var i = 0; i < stream_clusters[kommun].length; ++i) {
+                                    if (stream_clusters[kommun][i] == d.properties.name)
+                                        color = "#66bd63";
+                                }
+                            }
+
+                            if (kommun == d.properties.name) {
+                                color = "#006837";
+                            } 
+
+                            return color;
+                        });
+                }
+                else {
+                    d3.select("#map").selectAll("path")
+                        .style("fill", function(d,i) {
+                            return colors[quantize(d)];
+                        });
+                }
+                
+            }
+        });
 
         $("#clusterbtn").bootstrapSwitch();
         $('#clusterbtn').bootstrapSwitch('state', false);
@@ -534,7 +547,7 @@ function Map(){
             value = data.value;
 
             if (value) {
-                var kommun = $("#searchBox").attr("placeholder");
+                var kommun = chosen_mun;//$("#searchBox").attr("placeholder");
 
                 d3.select("#map").selectAll("path")
                     .transition().duration(500)

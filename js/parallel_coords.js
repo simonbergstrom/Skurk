@@ -34,6 +34,7 @@ function ParallelCoords()
         foreground;
 
     var svg = d3.select("#parallelCoords").append("svg:svg")
+        .attr("id", "pcID")
         .attr("width", width + margin[1] + margin[3])
         .attr("height", height + margin[0] + margin[2])
         .append("svg:g")
@@ -105,55 +106,55 @@ function ParallelCoords()
             .on("mousemove", function(d) {
                 //...
                tooltip.transition()
-               .duration(200)
-               .style("opacity", 1);
-                tooltip.html(d['kommun'])
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+                   .duration(200)
+                   .style("opacity", 1);
+                    tooltip.html(d['kommun'])
+                   .style("left", (d3.event.pageX + 5) + "px")
+                   .style("top", (d3.event.pageY - 28) + "px");
 
 
             })
             .on("mouseout", function(d) {
                 //...
                 tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+                   .duration(500)
+                   .style("opacity", 0);
                  
             });
             
-        // Add colored lines for focus
+            // Add colored lines for focus
             foreground = svg.append("svg:g")
-            .attr("class", "foreground")
-            .selectAll("path")
-            .data(self.data)
-            .enter().append("svg:path")
-            .attr("d", path)
-            .style("stroke", function(d, i) {
-
-                return colors[clusters[i]];
-                //return color(d['kommun']); 
-            })
+                .attr("class", "foreground")
+                .selectAll("path")
+                .data(self.data)
+                .enter().append("svg:path")
+                .attr("d", path)
+                .style("stroke", function(d, i) {
+                    
+                    return colors[clusters[i]];
+                    //return color(d['kommun']); 
+                })
             
             .on("mousemove", function(d) {
-                
-               resetColors();
 
-               tooltip.transition()
-               .duration(200)
-               .style("opacity", 1);
-                tooltip.html(d['kommun'])
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+
+                tooltip.transition()
+                   .duration(200)
+                   .style("opacity", 1);
+                    tooltip.html(d['kommun'])
+                   .style("left", (d3.event.pageX + 5) + "px")
+                   .style("top", (d3.event.pageY - 28) + "px");
 
             })
             .on("mouseout", function(d) {
                 //...
                 tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+                   .duration(500)
+                   .style("opacity", 0);
                  
             })
             .on("click", function(d){
+                parallelCoords1.markLine(d['kommun']);
                 markOtherViews(d['kommun']);
             });   
 
@@ -244,12 +245,22 @@ function ParallelCoords()
             return colors[clusters[i]];
             //return color(d['kommun']); 
         })
+        .transition().duration(200)
         .style("stroke-opacity", "0.7").style("stroke-width", "1px");
     }
     
 
     //Load new data
     $(document).ready(function(){
+
+        $("#viewBottomLeft").click(
+            function(e) {
+                if($(event.target.parentElement).attr('class') !== "foreground") {
+                    resetColors();
+
+                }
+            }
+        );
 
         $(".category").click(function(e){
             var category = $(this).text(); 
@@ -319,6 +330,7 @@ function ParallelCoords()
     this.markLine = function(value){
 
         d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke-width", function(d){ return d["kommun"] != value ? null : "6px" })
+        .transition().duration(200)
         .style("stroke-opacity", function(d){
 
             if(d['kommun'] == value)

@@ -1,3 +1,5 @@
+var chosen_mun = null;
+
 function StreamGraph(){
 
 	var self = this; // for internal d3 functions
@@ -361,6 +363,10 @@ function StreamGraph(){
 			});
         });
 
+        $("#searchBox").click( function() {
+        	$("#searchBox").attr("placeholder", "");
+        });
+
         $("#searchbtn").click( function() {
 
         	var searchtxt = $("#searchBox").val();
@@ -378,13 +384,13 @@ function StreamGraph(){
 
         		$("#searchBox").val("");
         		$("#searchBox").attr("placeholder", searchtxt);
+        		chosen_mun = searchtxt;
 
         		layers1 = stack(crimeDataJsonStream);
 
 	        	markOtherViews(searchtxt); 
 
 		        transition(layers1);
-	        	//draw();
 
         	}
     	});
@@ -404,9 +410,9 @@ function StreamGraph(){
  		crimeDataJsonStream = layering(self.data, value);
  		layers1 = stack(crimeDataJsonStream);
  		$("#searchBox").attr("placeholder", value);
+ 		chosen_mun = value;
  		
  		transition(layers1);
- 		//draw();
  	}      
 
 }
