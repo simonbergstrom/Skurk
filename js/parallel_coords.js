@@ -335,7 +335,7 @@ function ParallelCoords()
 
             if(d['kommun'] == value)
             {
-                return "1";
+                return "1.0";
             }
             else
             {
