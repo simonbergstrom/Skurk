@@ -2,7 +2,7 @@
 #intro {
 	height: 300px;
 	width: 600px;
-	margin: 200px auto;
+	margin: 150px auto;
 	text-align: center;
 }
 
@@ -15,6 +15,11 @@
 }
 
 #introText {
-	margin-top: 20px;
+	margin-top: 10px;
 	font-size: 16px;
+}
+
+#introImage {
+	margin-top: 10px;
+	margin-bottom: 20px;
 }

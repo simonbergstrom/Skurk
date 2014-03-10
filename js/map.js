@@ -87,8 +87,6 @@ function Map(){
     // Draw map
     function draw(geoData) {
 
-        calcLegend();
-
     	var kommuner = g.selectAll(".name").data(geoData);
 
     	kommuner.enter().insert("path")
@@ -155,6 +153,8 @@ function Map(){
     }
 
     function drawOriginalLegend() {
+
+        calcLegend();
 
         // Create legend labels
         var legend_labels = [];
@@ -589,7 +589,9 @@ function Map(){
 
             $("#crimeType").html(category);
 
-            d3.select("#map").selectAll("path").style("fill", function(d,i) {
+            drawOriginalLegend();
+
+            d3.select("#map").selectAll("path").transition().duration(300).style("fill", function(d,i) {
                 return colors[quantize(d)];
             });
 
