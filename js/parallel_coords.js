@@ -253,8 +253,10 @@ function ParallelCoords()
     $(document).ready(function(){
 
         $("#viewBottomLeft").click(
-            function() {
-                
+            function(event) {
+                if($(event.target.parentElement).attr('class') !== "foreground") {
+                    resetColors();
+                }
             }
         );
 

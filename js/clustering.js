@@ -106,6 +106,8 @@ function pam(data, k) {
 
 function pam_2(data, k) {
 
+	console.log("OBS: DE HÄR LOGGARNA SKA VARA HÄR, INGEN FIKA FÖR GRABBARNA!");
+
 	var mediods = {};
 	var clusters = {};
 	var data_json = {};
