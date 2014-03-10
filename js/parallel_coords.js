@@ -239,26 +239,22 @@ function ParallelCoords()
         });
     }
 
-    function resetColors()
-    {
+    function resetColors(){
         d3.select("#parallelCoords").selectAll(".foreground").selectAll("path").style("stroke", function(d, i){ 
             return colors[clusters[i]];
             //return color(d['kommun']); 
         })
-        .transition().duration(200)
         .style("stroke-opacity", "0.7").style("stroke-width", "1px");
     }
+    
     
 
     //Load new data
     $(document).ready(function(){
 
         $("#viewBottomLeft").click(
-            function(e) {
-                if($(event.target.parentElement).attr('class') !== "foreground") {
-                    resetColors();
-
-                }
+            function() {
+                
             }
         );
 
