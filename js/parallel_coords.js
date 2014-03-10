@@ -245,7 +245,7 @@ function ParallelCoords()
             return colors[clusters[i]];
             //return color(d['kommun']); 
         })
-        .transition().duration(200)
+        //.transition().duration(200)
         .style("stroke-opacity", "0.7").style("stroke-width", "1px");
     }
     
@@ -254,10 +254,9 @@ function ParallelCoords()
     $(document).ready(function(){
 
         $("#viewBottomLeft").click(
-            function(e) {
+            function(event) {
                 if($(event.target.parentElement).attr('class') !== "foreground") {
                     resetColors();
-
                 }
             }
         );
